@@ -5,16 +5,10 @@ import Image from "next/image"
 import { Calendar, MapPin, ArrowRight } from "lucide-react"
 import { motion } from "framer-motion"
 import { useState, useEffect } from 'react'
+import { optimizedImages } from '@/lib/optimizedImages'
 
 export function HeroSection() {
-	const slideshowImages = [
-		'/images/optimized/1.jpg',
-		'/images/optimized/3.jpg',
-		'/images/optimized/8.jpg',
-		'/images/optimized/DSC_7264.jpg',
-		'/images/optimized/IMG_0165.jpg',
-		'/images/optimized/IMG_0178 (1).jpg'
-	]
+	const slideshowImages = optimizedImages
 
 	const [currentIndex, setCurrentIndex] = useState(0)
 
@@ -40,8 +34,8 @@ export function HeroSection() {
 				))}
 			</div>
 
-			{/* Gradient overlay */}
-			<div className="absolute inset-0 z-10" style={{ background: 'linear-gradient(135deg, rgba(1,102,51,0.88) 0%, rgba(204,51,0,0.90) 100%)' }} />
+			{/* Gradient overlay (slightly reduced opacity) */}
+			<div className="absolute inset-0 z-10" style={{ background: 'linear-gradient(135deg, rgba(1,102,51,0.82) 0%, rgba(204,51,0,0.86) 100%)' }} />
 			{/* Bottom Fade */}
 			<div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent z-20" />
 

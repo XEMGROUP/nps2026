@@ -3,8 +3,25 @@
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { ArrowRight } from "lucide-react"
+import { useEffect, useState } from 'react'
+import { optimizedImages } from '@/lib/optimizedImages'
 
 export function PreviousSummits() {
+  const [a, setA] = useState(0)
+  const [b, setB] = useState(1)
+
+  useEffect(() => {
+    // pick two distinct random images from the optimized set
+    const pick = () => {
+      const len = optimizedImages.length
+      let i = Math.floor(Math.random() * len)
+      let j = Math.floor(Math.random() * len)
+      if (i === j) j = (j + 1) % len
+      setA(i)
+      setB(j)
+    }
+    pick()
+  }, [])
   return (
     <section className="py-24 bg-gradient-to-b from-emerald-50 via-amber-100 to-orange-50">
       <div className="container mx-auto px-4">
@@ -74,13 +91,13 @@ export function PreviousSummits() {
               <div
                 className="rounded-2xl shadow-xl w-full h-full bg-cover bg-center"
                 style={{
-                  backgroundImage: `url('/images/optimized/IMG_0165.jpg')`,
+                  backgroundImage: `url('${optimizedImages[a]}')`,
                 }}
               />
               <div
                 className="rounded-2xl shadow-xl w-full h-full bg-cover bg-center"
                 style={{
-                  backgroundImage: `url('/images/optimized/IMG_0178 (1).jpg')`,
+                  backgroundImage: `url('${optimizedImages[b]}')`,
                 }}
               />
             </div>

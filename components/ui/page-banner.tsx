@@ -2,6 +2,8 @@
 
 import Image from "next/image"
 import { motion } from "framer-motion"
+import { useEffect, useState } from 'react'
+import { optimizedImages } from '@/lib/optimizedImages'
 
 interface PageBannerProps {
   title: string
@@ -9,16 +11,22 @@ interface PageBannerProps {
   imagePatternUrl?: string
 }
 
-export function PageBanner({ title, subtitle, imagePatternUrl }: PageBannerProps) {
-  const defaultImage = "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=75"
-  
+export function PageBanner({ title, subtitle }: PageBannerProps) {
+  const [bg, setBg] = useState<string>(optimizedImages[0])
+
+  useEffect(() => {
+    // pick a random optimized image for every mount
+    const i = Math.floor(Math.random() * optimizedImages.length)
+    setBg(optimizedImages[i])
+  }, [])
+
   return (
     <div className="relative py-24 md:py-32 overflow-hidden" style={{
       background: `linear-gradient(135deg, #016633 0%, #CC3300 100%)`,
     }}>
       {/* Background Image */}
       <Image
-        src={imagePatternUrl || defaultImage}
+        src={bg}
         alt=""
         fill
         className="absolute inset-0 w-full h-full object-cover opacity-15 mix-blend-overlay"

@@ -54,7 +54,7 @@ export function Header() {
               priority
             />
               <Image
-                src="/images/logos/optimized/TNPRS.png"
+                src="/images/logos/optimized/TNPRS.webp"
                 alt="TNPRS icon"
                 height={48}
                 width={48}

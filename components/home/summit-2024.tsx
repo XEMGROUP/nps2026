@@ -5,13 +5,9 @@ import { motion } from "framer-motion"
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
 
-const summitImages = [
-  "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=800&q=80",
-  "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80",
-  "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80",
-  "https://images.unsplash.com/photo-1552664884-8d440ca09e8f?w=800&q=80",
-  "https://images.unsplash.com/photo-1552664888-8fe59e2d62b6?w=800&q=80",
-]
+import { optimizedImages } from '@/lib/optimizedImages'
+
+const summitImages = optimizedImages
 
 export function Summit2024() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)

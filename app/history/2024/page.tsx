@@ -3,6 +3,8 @@ import { Footer } from "@/components/layout/footer"
 import { PageBanner } from "@/components/ui/page-banner"
 import Link from "next/link"
 import { ArrowLeft, CheckCircle2 } from "lucide-react"
+import { optimizedImages } from '@/lib/optimizedImages'
+import { HistoryGallery } from '@/components/history/gallery'
 
 export const metadata = {
   title: "2024 Summit - National Pre-Retirement Summit",
@@ -27,6 +29,8 @@ const participants = [
 ]
 
 export default function History2024Page() {
+  
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
@@ -34,8 +38,9 @@ export default function History2024Page() {
         <PageBanner
           title="2024 Summit"
           subtitle="Establishing a National Platform for Retirement Readiness"
-          imagePatternUrl="https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=1920&q=80"
         />
+
+        <HistoryGallery images={optimizedImages} />
 
         <div className="container mx-auto px-4 py-16 max-w-5xl">
           {/* Back Link */}
@@ -116,6 +121,7 @@ export default function History2024Page() {
             </div>
           </div>
         </div>
+          
       </main>
       <Footer />
     </div>

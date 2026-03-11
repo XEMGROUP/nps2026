@@ -20,7 +20,7 @@ export function CallToAction() {
     <section 
       className="py-24 text-white relative overflow-hidden"
       style={{
-        background: `linear-gradient(180deg, #016633 0%, #1e3a5f 100%)`,
+        background: `linear-gradient(180deg, #016633 0%, #CC3300 100%)`,
       }}
       onMouseMove={handleMouseMove}
     >
@@ -57,7 +57,7 @@ export function CallToAction() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center relative z-20">
             <Link
               href="/register"
-              className="inline-flex items-center justify-center gap-2 bg-white text-emerald-700 px-8 py-4 rounded-lg font-bold transition-all shadow-lg hover:shadow-xl group"
+              className="inline-flex items-center justify-center gap-2 bg-red-800 text-white px-8 py-4 rounded-lg font-bold transition-all shadow-lg hover:shadow-xl group"
             >
               Register Now
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

@@ -3,6 +3,8 @@ import { Footer } from "@/components/layout/footer"
 import { PageBanner } from "@/components/ui/page-banner"
 import Link from "next/link"
 import { ArrowLeft, CheckCircle2 } from "lucide-react"
+import { optimizedImages } from '@/lib/optimizedImages'
+import { HistoryGallery } from '@/components/history/gallery'
 
 export const metadata = {
   title: "2025 Summit - National Pre-Retirement Summit",
@@ -25,6 +27,15 @@ const outcomes = [
 ]
 
 export default function History2025Page() {
+  const [idx, setIdx] = useState(0)
+  const [isOpen, setIsOpen] = useState(false)
+
+  const openModal = (i:number) => { setIdx(i); setIsOpen(true) }
+  const closeModal = () => setIsOpen(false)
+
+  const prev = () => setIdx((i) => (i - 1 + optimizedImages.length) % optimizedImages.length)
+  const next = () => setIdx((i) => (i + 1) % optimizedImages.length)
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
@@ -32,8 +43,9 @@ export default function History2025Page() {
         <PageBanner
           title="2025 Summit"
           subtitle="The Retirement Revolution: Embracing the New Era of Possibilities"
-          imagePatternUrl="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1920&q=80"
         />
+
+        <HistoryGallery images={optimizedImages} />
 
         <div className="container mx-auto px-4 py-16 max-w-5xl">
           {/* Back Link */}
@@ -125,6 +137,7 @@ export default function History2025Page() {
             </div>
           </div>
         </div>
+        
       </main>
       <Footer />
     </div>
