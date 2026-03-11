@@ -61,7 +61,7 @@ export function FocusAreas() {
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
           variants={fadeInUp}
-          className="max-w-3xl mb-16"
+          className="max-w-3xl mx-auto mb-16"
         >
           <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight">
             2026 Implementation Focus
@@ -77,7 +77,7 @@ export function FocusAreas() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.6 }}
-              className="w-full max-w-4xl bg-white rounded-3xl p-8 md:p-12 border border-[#E5E7EB] shadow-xl shadow-black/5 flex flex-col lg:flex-row gap-8 lg:items-center"
+              className="w-full max-w-full bg-white rounded-3xl p-8 md:p-12 border border-[#E5E7EB] shadow-xl shadow-black/5 flex flex-col lg:flex-row gap-8 lg:items-center"
             >
               <div className="flex-1">
                 <p className="font-mono text-xs font-bold uppercase tracking-widest text-[#016633] mb-4">2026 Theme</p>

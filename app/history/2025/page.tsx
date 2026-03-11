@@ -27,14 +27,7 @@ const outcomes = [
 ]
 
 export default function History2025Page() {
-  const [idx, setIdx] = useState(0)
-  const [isOpen, setIsOpen] = useState(false)
-
-  const openModal = (i:number) => { setIdx(i); setIsOpen(true) }
-  const closeModal = () => setIsOpen(false)
-
-  const prev = () => setIdx((i) => (i - 1 + optimizedImages.length) % optimizedImages.length)
-  const next = () => setIdx((i) => (i + 1) % optimizedImages.length)
+  // Gallery is rendered by the client `HistoryGallery` component; no hooks needed here.
 
   return (
     <div className="flex flex-col min-h-screen">
