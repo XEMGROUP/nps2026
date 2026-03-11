@@ -25,18 +25,23 @@ export function HeroSection() {
 		return () => clearInterval(interval)
 	}, [])
 
-	const currentBg = slideshowImages[currentIndex]
-
 	return (
 		<section
-			className="relative min-h-[90vh] flex items-center overflow-hidden"
-			style={{
-				backgroundImage: `linear-gradient(135deg, rgba(1,102,51,0.92) 0%, rgba(204,51,0,0.85) 100%), url('${currentBg}')`,
-				backgroundSize: 'cover',
-				backgroundPosition: 'center top',
-				backgroundRepeat: 'no-repeat',
-			}}
-		>
+			className="relative min-h-[90vh] flex items-center overflow-hidden">
+
+			{/* Slideshow image layers (cross-fade) */}
+			<div className="absolute inset-0 z-0">
+				{slideshowImages.map((src, idx) => (
+					<div
+						key={src}
+						className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ${idx === currentIndex ? 'opacity-100' : 'opacity-0'}`}
+						style={{ backgroundImage: `url('${src}')` }}
+					/>
+				))}
+			</div>
+
+			{/* Gradient overlay */}
+			<div className="absolute inset-0 z-10" style={{ background: 'linear-gradient(135deg, rgba(1,102,51,0.88) 0%, rgba(204,51,0,0.90) 100%)' }} />
 			{/* Bottom Fade */}
 			<div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent z-20" />
 
@@ -64,19 +69,20 @@ export function HeroSection() {
 						</motion.div>
 
 						{/* Main Heading */}
-						<motion.div
-							initial={{ opacity: 0, y: 20 }}
-							animate={{ opacity: 1, y: 0 }}
-							transition={{ duration: 0.5, delay: 0.05 }}
-							style={{ willChange: 'opacity, transform' }}
-						>
-							<h1 className="text-5xl md:text-7xl lg:text-8xl font-black leading-[1.1] tracking-tighter mb-6">
-								<span className="text-gray-400">Own Your</span> <br />
-								<span className="text-white">
-									Retirement.
-								</span>
-							</h1>
-						</motion.div>
+							<motion.div
+								initial={{ opacity: 0, y: 20 }}
+								animate={{ opacity: 1, y: 0 }}
+								transition={{ duration: 0.5, delay: 0.05 }}
+								style={{ willChange: 'opacity, transform' }}
+								className="group"
+							>
+								<h1 className="text-5xl md:text-7xl lg:text-8xl font-black leading-[1.1] tracking-tighter mb-6">
+									<span className="text-white">Own Your</span> <br />
+									<span className="text-amber-300 transition-all duration-300 group-hover:drop-shadow-[0_0_20px_rgba(250,204,21,0.9)] group-hover:scale-[1.02] inline-block">
+										Retirement.
+									</span>
+								</h1>
+							</motion.div>
 
 						{/* Subtitle */}
 						<motion.p
@@ -99,10 +105,10 @@ export function HeroSection() {
 						>
 							<Link
 								href="/register"
-								className="bg-white hover:bg-white/90 text-slate-900 px-8 py-4 rounded-xl font-bold text-lg text-center shadow-xl transition-all hover:-translate-y-1 flex items-center justify-center gap-2 group"
+								className="bg-gradient-to-r from-emerald-500 to-orange-400 hover:from-emerald-600 hover:to-orange-500 text-white px-8 py-4 rounded-xl font-bold text-lg text-center shadow-xl transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2"
 							>
 								Register Now
-								<ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+								<ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
 							</Link>
 							<Link
 								href="/program"
@@ -118,29 +124,38 @@ export function HeroSection() {
 						initial={{ opacity: 0, x: 30 }}
 						animate={{ opacity: 1, x: 0 }}
 						transition={{ duration: 0.6, delay: 0.3 }}
-						className="hidden lg:flex flex-col items-center gap-4 h-full justify-center"
-					>
-						<h2 className="relative z-20 text-5xl md:text-6xl lg:text-7xl font-black text-amber-300 leading-none">2026</h2>
-						<div className="max-w-[36rem] w-full max-h-[48vh] mx-auto flex items-center justify-center mt-0 relative z-10 overflow-hidden">
-							<Image
-								src="/images/logos/optimized/NPSlogoWhite.webp"
-								alt="NPS 2026 logo"
-								width={704}
-								height={704}
-								className="object-contain max-h-full w-auto"
-								priority
-							/>
-						</div>
-						<div className="max-w-[28rem] w-full max-h-[10vh] mx-auto flex items-center justify-center">
-							<Image
-								src="/images/logos/optimized/TRHL.webp"
-								alt="TRHL"
-								width={400}
-								height={120}
-								className="object-contain max-h-full w-auto"
-							/>
-						</div>
-					</motion.div>
+						className="hidden lg:flex flex-col items-center gap-4 h-full justify-center w-full"
+						>
+							<div className="flex flex-col lg:flex-row items-center lg:items-stretch gap-6 h-full w-full justify-center">
+								{/* left: heading + main logo stacked */}
+								<div className="flex flex-col items-center gap-4 h-full">
+									<h2 className="relative z-20 text-6xl md:text-8xl lg:text-9xl font-black text-amber-300 leading-none">2026</h2>
+									<div className="max-w-[44rem] w-full max-h-[64vh] flex items-center justify-center mt-0 relative z-10 overflow-hidden">
+										<Image
+											src="/images/logos/optimized/NPSlogoWhite.webp"
+											alt="NPS 2026 logo"
+											width={704}
+											height={704}
+											className="object-contain max-h-full w-auto"
+											priority
+										/>
+										{/* TRHL below main logo */}
+										<div className="mt-4">
+											<Image
+												src="/images/logos/optimized/TRHL.png"
+												alt="TRHL"
+												width={240}
+												height={72}
+												className="object-contain"
+												priority
+											/>
+										</div>
+									</div>
+								</div>
+
+								{/* TRHL moved to header icons per user request */}
+							</div>
+						</motion.div>
 				</div>
 			</div>
 

@@ -53,20 +53,16 @@ export function Header() {
               className="h-full w-auto object-contain"
               priority
             />
-            <Image
-              src="/images/logos/optimized/NRSicon.webp"
-              alt="NRS Icon"
-              height={48}
-              width={48}
-              className="h-full w-auto object-contain"
-              priority
-            />
+              <Image
+                src="/images/logos/optimized/TNPRS.png"
+                alt="TNPRS icon"
+                height={48}
+                width={48}
+                className="h-full w-auto object-contain"
+                priority
+              />
           </div>
-          <div className="flex flex-col items-start">
-            <span className="text-2xl font-black text-slate-900 group-hover:text-emerald-700 transition-colors tracking-tighter leading-none">
-              NPS<span className="text-orange-600">2026</span>
-            </span>
-          </div>
+          {/* title removed from header icons area per design */}
         </Link>
 
         {/* Desktop Navigation */}
