@@ -57,12 +57,28 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-    
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    
-    setIsSubmitting(false)
-    setIsSubmitted(true)
+
+    try {
+      const res = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      })
+
+      const result = await res.json()
+
+      if (!res.ok) {
+        setIsSubmitting(false)
+        alert(result?.error || 'Registration failed')
+        return
+      }
+
+      setIsSubmitting(false)
+      setIsSubmitted(true)
+    } catch (err) {
+      setIsSubmitting(false)
+      alert('Submission failed. Please try again.')
+    }
   }
 
   if (isSubmitted) {
