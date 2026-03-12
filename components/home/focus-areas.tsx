@@ -61,7 +61,7 @@ export function FocusAreas() {
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
           variants={fadeInUp}
-          className="max-w-3xl mb-8 text-center"
+          className="max-w-3xl mx-auto mb-8 text-center"
         >
           <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight">
             2026 Implementation Focus
