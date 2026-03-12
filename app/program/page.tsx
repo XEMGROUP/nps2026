@@ -97,43 +97,43 @@ export default function Program2026Page() {
           imagePatternUrl="https://images.unsplash.com/photo-1552664730-d307ca884978?w=1920&q=80"
         />
 
-        <div className="container mx-auto px-4 py-8 max-w-6xl">
+        <div className="container mx-auto px-3 py-6 max-w-6xl">
           {/* Main Content Card - No Border */}
-          <div className="bg-white rounded-3xl p-12 md:p-16 shadow-xl shadow-black/5">
-            <h2 className="text-3xl font-black text-secondary mb-6 tracking-tight">Strategic Shift: From Awareness to Execution</h2>
-            <p className="text-lg text-muted-foreground leading-relaxed mb-8">
+          <div className="bg-white rounded-3xl p-6 md:p-12 shadow-xl shadow-black/5">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-secondary mb-4 tracking-tight">Strategic Shift: From Awareness to Execution</h2>
+            <p className="text-base md:text-lg text-muted-foreground leading-relaxed mb-6">
               Building on the strong national foundation established in 2024 and the continental expansion achieved in 2025, the 2026 National Pre-Retirement Summit represents a strategic shift from awareness to execution. With the theme "Own Your Retirement: From Planning to Action," the Summit will focus on enabling participants to translate knowledge into concrete decisions, enterprises, investments, and lifestyle changes that support long-term security, purpose, and wellbeing.
             </p>
 
-            <p className="text-lg text-muted-foreground leading-relaxed mb-8">
+            <p className="text-base md:text-lg text-muted-foreground leading-relaxed mb-6">
               The Summit will bring together policymakers, labour unions, pension administrators, financial service providers, health and wellness experts, entrepreneurs, and prospective retirees to create a comprehensive ecosystem that supports the transition from active service into financially secure, healthy, and purpose-driven post-service lives.
             </p>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 mb-12">
-              <div className="bg-muted rounded-xl p-6 text-center">
-                <span className="block text-4xl font-black text-secondary mb-2">15-16</span>
-                <span className="text-sm font-mono text-muted-foreground">July 2026</span>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-8 mb-8">
+              <div className="bg-muted rounded-xl p-4 text-center">
+                <span className="block text-2xl md:text-4xl font-black text-secondary mb-1">15-16</span>
+                <span className="text-xs md:text-sm font-mono text-muted-foreground">July 2026</span>
               </div>
-              <div className="bg-muted rounded-xl p-6 text-center">
-                <span className="block text-4xl font-black text-secondary mb-2">2</span>
-                <span className="text-sm font-mono text-muted-foreground">Main Days</span>
+              <div className="bg-muted rounded-xl p-4 text-center">
+                <span className="block text-2xl md:text-4xl font-black text-secondary mb-1">2</span>
+                <span className="text-xs md:text-sm font-mono text-muted-foreground">Main Days</span>
               </div>
-              <div className="bg-muted rounded-xl p-6 text-center">
-                <span className="block text-4xl font-black text-secondary mb-2">9</span>
-                <span className="text-sm font-mono text-muted-foreground">Technical Sessions</span>
+              <div className="bg-muted rounded-xl p-4 text-center">
+                <span className="block text-2xl md:text-4xl font-black text-secondary mb-1">9</span>
+                <span className="text-xs md:text-sm font-mono text-muted-foreground">Technical Sessions</span>
               </div>
-              <div className="bg-muted rounded-xl p-6 text-center">
-                <span className="block text-4xl font-black text-secondary mb-2">Abuja</span>
-                <span className="text-sm font-mono text-muted-foreground">Nigeria</span>
+              <div className="bg-muted rounded-xl p-4 text-center">
+                <span className="block text-2xl md:text-4xl font-black text-secondary mb-1">Abuja</span>
+                <span className="text-xs md:text-sm font-mono text-muted-foreground">Nigeria</span>
               </div>
             </div>
 
             {/* Objectives */}
-            <h3 className="text-2xl font-black text-secondary mb-6 tracking-tight">Summit Objectives</h3>
-            <ul className="space-y-3 mb-12">
+            <h3 className="text-xl sm:text-2xl font-black text-secondary mb-4 tracking-tight">Summit Objectives</h3>
+            <ul className="space-y-2 mb-8">
               {objectives.map((objective, index) => (
-                <li key={index} className="flex items-start gap-3 text-muted-foreground">
+                <li key={index} className="flex items-start gap-3 text-base text-muted-foreground">
                   <CheckCircle2 className="w-5 h-5 text-primary shrink-0 mt-1" />
                   <span>{objective}</span>
                 </li>
@@ -141,10 +141,10 @@ export default function Program2026Page() {
             </ul>
 
             {/* Target Audience */}
-            <h3 className="text-2xl font-black text-secondary mb-6 tracking-tight">Target Audience</h3>
-            <ul className="space-y-3 mb-12">
+            <h3 className="text-xl sm:text-2xl font-black text-secondary mb-4 tracking-tight">Target Audience</h3>
+            <ul className="space-y-2 mb-8">
               {targetAudience.map((audience, index) => (
-                <li key={index} className="flex items-start gap-3 text-muted-foreground">
+                <li key={index} className="flex items-start gap-3 text-base text-muted-foreground">
                   <CheckCircle2 className="w-5 h-5 text-accent shrink-0 mt-1" />
                   <span>{audience}</span>
                 </li>
@@ -152,10 +152,10 @@ export default function Program2026Page() {
             </ul>
 
             {/* Key Themes */}
-            <h3 className="text-2xl font-black text-secondary mb-6 tracking-tight">Key Technical Themes</h3>
-            <ul className="space-y-3 mb-12">
+            <h3 className="text-xl sm:text-2xl font-black text-secondary mb-4 tracking-tight">Key Technical Themes</h3>
+            <ul className="space-y-2 mb-8">
               {keyThemes.map((theme, index) => (
-                <li key={index} className="flex items-start gap-3 text-muted-foreground">
+                <li key={index} className="flex items-start gap-3 text-base text-muted-foreground">
                   <CheckCircle2 className="w-5 h-5 text-primary shrink-0 mt-1" />
                   <span>{theme}</span>
                 </li>
@@ -163,8 +163,8 @@ export default function Program2026Page() {
             </ul>
 
             {/* Summit Format */}
-            <h3 className="text-2xl font-black text-secondary mb-6 tracking-tight">Summit Format</h3>
-            <p className="text-lg text-muted-foreground leading-relaxed mb-8">
+            <h3 className="text-xl sm:text-2xl font-black text-secondary mb-4 tracking-tight">Summit Format</h3>
+            <p className="text-base md:text-lg text-muted-foreground leading-relaxed mb-6">
               The 2026 Summit will run over two main days (July 15-16), combining policy dialogue, technical capacity-building sessions, exhibitions, and networking opportunities. An optional Day 3 extension will provide advanced sessions on legacy planning, entrepreneurship, and business pitching for participants seeking deeper engagement.
             </p>
 
@@ -195,15 +195,15 @@ export default function Program2026Page() {
             </div>
 
             {/* Event Schedule */}
-            <h3 className="text-2xl font-black text-secondary mb-8 tracking-tight">Event Schedule</h3>
-            <div className="space-y-6 mb-12">
+            <h3 className="text-xl sm:text-2xl font-black text-secondary mb-6 tracking-tight">Event Schedule</h3>
+            <div className="space-y-4 mb-8">
               {programDays.map((day, index) => (
                 <div key={index} className="bg-white rounded-2xl p-6">
                   <div className="flex items-center gap-4 mb-4">
                     <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary font-black text-sm">{day.day}</span>
                     <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">{day.date}</span>
                   </div>
-                  <h4 className="text-xl font-black text-secondary mb-4">{day.title}</h4>
+                  <h4 className="text-lg font-black text-secondary mb-3">{day.title}</h4>
                   <ul className="space-y-2">
                     {day.sessions.map((session, sessionIndex) => (
                       <li key={sessionIndex} className="flex items-start gap-3 text-sm text-muted-foreground">
@@ -219,8 +219,8 @@ export default function Program2026Page() {
             {/* CTA Section */}
             <div className="pt-8 mt-8">
               <div className="rounded-3xl p-8 md:p-12 text-center" style={{ background: 'linear-gradient(180deg, #016633 0%, #1e3a5f 100%)' }}>
-                <h3 className="text-3xl font-black mb-4 text-white">Ready to Own Your Retirement?</h3>
-                <p className="text-white/80 mb-8 max-w-2xl mx-auto">
+                <h3 className="text-2xl sm:text-3xl font-black mb-4 text-white">Ready to Own Your Retirement?</h3>
+                <p className="text-base md:text-lg text-white/80 mb-6 max-w-2xl mx-auto">
                   Join us for two days of transformative learning, expert technical sessions, and actionable strategies to take control of your retirement journey.
                 </p>
                 <a
