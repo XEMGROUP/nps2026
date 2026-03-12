@@ -57,7 +57,7 @@ export function Header() {
                 src="/images/logos/optimized/TNPRS.webp"
                 alt="TNPRS icon"
                 height={48}
-                width={48}
+                width={211}
                 className="h-full w-auto object-contain"
                 priority
               />
