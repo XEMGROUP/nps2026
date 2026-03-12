@@ -61,7 +61,7 @@ export function FocusAreas() {
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
           variants={fadeInUp}
-          className="max-w-3xl mx-auto mb-16"
+          className="max-w-3xl mb-8 text-center"
         >
           <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight">
             2026 Implementation Focus
@@ -69,39 +69,39 @@ export function FocusAreas() {
           <p className="text-lg text-slate-600 font-mono">
             Moving beyond dialogue to actionable outcomes. The 2026 Summit prioritizes execution, measurable impact, and real investment pathways.
           </p>
-
-          {/* Theme Callout Card (per card.md) - centered */}
-          <div className="mt-8 flex justify-center">
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.6 }}
-              className="w-full max-w-full bg-white rounded-3xl p-8 md:p-12 border border-[#E5E7EB] shadow-xl shadow-black/5 flex flex-col lg:flex-row gap-8 lg:items-center"
-            >
-              <div className="flex-1">
-                <p className="font-mono text-xs font-bold uppercase tracking-widest text-[#016633] mb-4">2026 Theme</p>
-                <h3 className="text-3xl md:text-4xl font-black text-[#02004C] tracking-tighter leading-tight mb-4">Driving Implementation: From Policy to Practice</h3>
-                <p className="text-[#787878] text-lg font-medium leading-relaxed">The 2026 program focuses on measurable outcomes across policy reform, investment pathways, and scalable retirement solutions — with dedicated working groups for finance, health, and digital inclusion.</p>
-              </div>
-              <div className="lg:w-64 shrink-0">
-                <div className="bg-[#02004C] rounded-2xl p-8 text-white text-center">
-                  <p className="font-mono text-xs uppercase tracking-widest text-white/50 mb-3">Save the Date</p>
-                  <p className="font-black text-4xl text-[#016633] tracking-tighter mb-1">July</p>
-                  <p className="font-black text-6xl text-white tracking-tighter leading-none">15–16</p>
-                  <p className="font-mono text-sm text-white/60 mt-3 uppercase tracking-wider">2026 · Abuja</p>
-                </div>
-              </div>
-            </motion.div>
-          </div>
         </motion.div>
+
+        {/* Theme Callout Card (per card.md) - centered and wider than the heading */}
+        <div className="mt-6 flex justify-center">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.6 }}
+            className="w-full max-w-5xl bg-white rounded-3xl px-6 py-8 md:px-10 md:py-12 mb-8 border border-[#E5E7EB] shadow-xl shadow-black/5 flex flex-col lg:flex-row gap-6 lg:items-center"
+          >
+            <div className="flex-1">
+              <p className="font-mono text-xs font-bold uppercase tracking-widest text-[#016633] mb-4">2026 Theme</p>
+              <h3 className="text-3xl md:text-4xl font-black text-[#02004C] tracking-tighter leading-tight mb-4">Driving Implementation: From Policy to Practice</h3>
+              <p className="text-[#787878] text-lg font-medium leading-relaxed">The 2026 program focuses on measurable outcomes across policy reform, investment pathways, and scalable retirement solutions — with dedicated working groups for finance, health, and digital inclusion.</p>
+            </div>
+            <div className="lg:w-64 shrink-0">
+              <div className="bg-[#02004C] rounded-2xl p-8 text-white text-center">
+                <p className="font-mono text-xs uppercase tracking-widest text-white/50 mb-3">Save the Date</p>
+                <p className="font-black text-4xl text-[#016633] tracking-tighter mb-1">July</p>
+                <p className="font-black text-6xl text-white tracking-tighter leading-none">15–16</p>
+                <p className="font-mono text-sm text-white/60 mt-3 uppercase tracking-wider">2026 · Abuja</p>
+              </div>
+            </div>
+          </motion.div>
+        </div>
 
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-50px" }}
           variants={staggerContainer}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
           {focusAreas.map((area, index) => (
             <motion.div

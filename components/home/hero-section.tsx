@@ -124,7 +124,7 @@ export function HeroSection() {
 								{/* left: heading + main logo stacked */}
 								<div className="flex flex-col items-center gap-4 h-full">
 									<h2 className="relative z-20 text-6xl md:text-8xl lg:text-9xl font-black text-amber-300 leading-none">2026</h2>
-									<div className="max-w-[44rem] w-full max-h-[64vh] flex items-center justify-center mt-0 relative z-10 overflow-hidden">
+									<div className="max-w-[44rem] w-full max-h-[64vh] flex flex-col items-center mt-0 relative z-10 overflow-visible">
 										<Image
 											src="/images/logos/optimized/NPSlogoWhite.webp"
 											alt="NPS 2026 logo"
