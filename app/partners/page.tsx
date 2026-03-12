@@ -3,6 +3,7 @@
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { PageBanner } from "@/components/ui/page-banner"
+import { PartnersMarquee } from "@/components/home/partners-marquee"
 import { motion } from "framer-motion"
 import { CheckCircle2, Landmark, Building2, Users, Shield, Banknote, Globe, ArrowRight } from "lucide-react"
 
@@ -80,6 +81,8 @@ export default function PartnersPage() {
           title="Partners & Sponsors"
           subtitle="Join Africa's premier retirement readiness platform as a strategic partner."
         />
+
+        <PartnersMarquee />
 
         <div className="container mx-auto px-4 py-16 max-w-6xl">
           {/* Current Partners Section */}

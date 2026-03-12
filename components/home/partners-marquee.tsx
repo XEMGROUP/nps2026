@@ -1,16 +1,11 @@
 "use client"
 
-import { Landmark, Building2, Users, Shield, Banknote, Globe } from "lucide-react"
+import Image from "next/image"
 
-const partners = [
-  { name: "OSGF", icon: Landmark, color: "text-slate-700" },
-  { name: "OHCSF", icon: Building2, color: "text-slate-700" },
-  { name: "NLC", icon: Users, color: "text-emerald-700" },
-  { name: "NSITF", icon: Shield, color: "text-orange-600" },
-  { name: "BPSR", icon: Landmark, color: "text-slate-700" },
-  { name: "Galaxy Backbone", icon: Globe, color: "text-emerald-700" },
-  { name: "Trustfund Pensions", icon: Banknote, color: "text-orange-600" },
-  { name: "ECOWAS Commission", icon: Globe, color: "text-emerald-700" },
+// Images placed in public/images/logos/marquee
+const marqueeImages = [
+  '1.png', '2.png', '3.png', '4.png', '5.png', '7.png', '8.png', '9.png', '11.png', '12.png', '13.png', '15.png',
+  'nlc.png', 'nps.png', 'TRHL.png', 'trustfund.png'
 ]
 
 export function PartnersMarquee() {
@@ -29,42 +24,23 @@ export function PartnersMarquee() {
         <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
 
         {/* Marquee */}
-        <div className="animate-marquee flex items-center gap-16 py-4" style={{ willChange: 'transform' }}>
+        <div className="animate-marquee flex items-center gap-12 py-6" style={{ willChange: 'transform' }}>
           {/* First Set */}
-          {partners.map((partner, index) => (
-            <div
-              key={`first-${index}`}
-              className="flex items-center gap-3 grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all cursor-default shrink-0"
-            >
-              <partner.icon className={`w-8 h-8 ${partner.color}`} />
-              <span className="font-black text-2xl text-slate-800 tracking-tighter whitespace-nowrap">
-                {partner.name}
-              </span>
+          {marqueeImages.map((name, idx) => (
+            <div key={`m1-${idx}`} className="flex items-center grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all cursor-default shrink-0">
+              <Image src={`/images/logos/marquee/${name}`} alt={name.replace(/\.[^.]+$/, '')} width={160} height={48} className="h-12 w-auto object-contain" />
             </div>
           ))}
           {/* Duplicate Set for Seamless Loop */}
-          {partners.map((partner, index) => (
-            <div
-              key={`second-${index}`}
-              className="flex items-center gap-3 grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all cursor-default shrink-0"
-            >
-              <partner.icon className={`w-8 h-8 ${partner.color}`} />
-              <span className="font-black text-2xl text-slate-800 tracking-tighter whitespace-nowrap">
-                {partner.name}
-              </span>
+          {marqueeImages.map((name, idx) => (
+            <div key={`m2-${idx}`} className="flex items-center grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all cursor-default shrink-0">
+              <Image src={`/images/logos/marquee/${name}`} alt={name.replace(/\.[^.]+$/, '')} width={160} height={48} className="h-12 w-auto object-contain" />
             </div>
           ))}
         </div>
       </div>
 
-      <div className="container mx-auto px-4 mt-8 text-center">
-        <a
-          href="/partners"
-          className="inline-flex items-center gap-2 text-sm font-bold text-emerald-700 hover:text-emerald-800 transition-colors"
-        >
-          View All Partners & Sponsorship Tiers
-        </a>
-      </div>
+      {/* Link removed as requested */}
     </section>
   )
 }
