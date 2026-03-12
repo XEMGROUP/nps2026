@@ -73,6 +73,18 @@ export default function RegisterPage() {
         return
       }
 
+      // After successful registration, trigger welcome email via server route.
+      try {
+        await fetch('/api/send-welcome', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: formData.fullName, email: formData.email })
+        })
+      } catch (emailErr) {
+        // Log but don't block the flow for the user
+        console.error('Failed to send welcome email', emailErr)
+      }
+
       setIsSubmitting(false)
       setIsSubmitted(true)
     } catch (err) {
