@@ -45,12 +45,10 @@ export function Footer() {
           {/* Brand & Info */}
           <div>
             <Link href="/" className="inline-block mb-6">
-              <span className="text-3xl font-black tracking-tighter text-white">
-                NPS<span className="text-emerald-400">2026</span>
-              </span>
-              <span className="block text-xs font-semibold text-gray-400 uppercase tracking-widest mt-1">
-                XEM Consultants Ltd
-              </span>
+              <div className="flex flex-col items-start">
+                <img src="/images/logos/optimized/xem.webp" alt="XEM Consultants" className="h-10 object-contain mb-2" />
+                <img src="/images/logos/optimized/npslogo.webp" alt="NPS2026" className="h-10 object-contain" />
+              </div>
             </Link>
             <p className="text-gray-300 font-mono text-sm leading-relaxed mb-6">
               Nigeria&apos;s premier platform advancing retirement readiness, financial security, and post-career productivity across Africa.

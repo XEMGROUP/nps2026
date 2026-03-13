@@ -55,7 +55,7 @@ export function Summit2025() {
             transition={{ duration: 0.6 }}
             className="w-full lg:w-1/2 relative flex"
           >
-            <div className="relative flex-1 min-h-0 md:min-h-[400px] lg:min-h-full overflow-hidden shadow-2xl">
+            <div className="relative flex-1 min-h-[260px] md:min-h-[400px] lg:min-h-full overflow-hidden shadow-2xl">
               {/* Main Image */}
               <div
                 className="absolute inset-0 bg-cover bg-center transition-all duration-500"
