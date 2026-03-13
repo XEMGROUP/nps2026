@@ -50,32 +50,25 @@ export function HeroSection() {
 			{/* Bottom Fade */}
 			<div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent z-20" />
 
+			{/* Decorative centered logo behind text (above gradient, below content) */}
+			<div className="absolute top-6 left-1/2 -translate-x-1/2 z-20 pointer-events-none opacity-100 w-64 md:w-96 lg:w-[28rem]">
+				<Image
+					src="/images/logos/optimized/NPSlogoWhite.webp"
+					alt="NPS decorative logo"
+					width={900}
+					height={900}
+					className="w-full h-auto object-contain"
+					priority
+				/>
+			</div>
+
 			{/* All Content Inside Hero Section */}
 			<div className="relative z-30 flex-1 flex flex-col justify-center">
 				{/* Main Content - Flex to push buttons down */}
 				<div className="container mx-auto px-4 py-4 md:py-6 w-full">
 					<div className="flex flex-col lg:flex-row items-start lg:items-center gap-8 lg:gap-12 w-full">
 						<div className="max-w-4xl flex-1 w-full">
-							{/* Date/Location Badge */}
-							<motion.div
-								initial={{ opacity: 0, x: -20 }}
-								animate={{ opacity: 1, x: 0 }}
-								transition={{ duration: 0.4 }}
-								className="inline-flex items-center gap-2 md:gap-4 px-3 md:px-4 py-2 rounded-none bg-red-700 text-white font-mono text-xs md:text-sm mb-2 md:mb-3 font-bold"
-								style={{ willChange: 'opacity, transform' }}
-							>
-								<span className="flex items-center gap-2">
-									<Calendar className="w-3 h-3 md:w-4 md:h-4" />
-									<span className="hidden sm:inline">15-16 July 2026</span>
-									<span className="sm:hidden">Jul 15-16</span>
-								</span>
-								<span className="w-1 h-1 rounded-full bg-white/50" />
-								<span className="flex items-center gap-2">
-									<MapPin className="w-3 h-3 md:w-4 md:h-4" />
-									<span className="hidden sm:inline">Abuja, Nigeria</span>
-									<span className="sm:hidden">Abuja</span>
-								</span>
-							</motion.div>
+
 
 							{/* Main Heading */}
 							<motion.div
@@ -85,9 +78,11 @@ export function HeroSection() {
 								style={{ willChange: 'opacity, transform' }}
 								className="group mb-0"
 							>
-								<div className="mb-2 md:mb-3 text-xs md:text-lg uppercase tracking-tight text-white font-mono font-bold">2026 theme:</div>
 								<h1 className="font-black group leading-none">
-									<span className="text-white block text-2xl md:text-5xl lg:text-7xl tracking-tight">Own Your</span>
+									<div className="flex items-center gap-4 mb-1">
+										<span className="bg-red-700 text-white font-black uppercase px-3 py-1 rounded text-sm md:text-lg tracking-tight">2026 theme:</span>
+										<span className="text-white block text-2xl md:text-5xl lg:text-7xl tracking-tight">Own Your</span>
+									</div>
 									<span className="text-amber-300 block text-4xl md:text-7xl lg:text-9xl font-black transition-all duration-300 group-hover:drop-shadow-[0_0_36px_rgba(250,204,21,0.95)] tracking-tight">
 										Retirement
 									</span>
@@ -98,25 +93,7 @@ export function HeroSection() {
 							</motion.div>
 						</div>
 
-						{/* Right Side: NPS 2026 Logo and Year - Hidden on Mobile */}
-						<motion.div
-							initial={{ opacity: 0, x: 30 }}
-							animate={{ opacity: 1, x: 0 }}
-							transition={{ duration: 0.6, delay: 0.3 }}
-							className="hidden lg:flex flex-col items-center gap-3 justify-center flex-1"
-						>
-							<h2 className="relative z-20 text-5xl md:text-6xl lg:text-7xl font-black text-amber-300 leading-none">2026</h2>
-							<div className="max-w-[60rem] w-full max-h-[40vh] flex flex-col items-center relative z-10 overflow-visible">
-								<Image
-									src="/images/logos/optimized/NPSlogoWhite.webp"
-									alt="NPS 2026 logo"
-									width={900}
-									height={900}
-									className="object-contain max-h-full w-auto"
-									priority
-								/>
-							</div>
-						</motion.div>
+
 					</div>
 				</div>
 
@@ -128,6 +105,7 @@ export function HeroSection() {
 					className="w-screen relative left-1/2 -translate-x-1/2 bg-yellow-400 py-2 md:py-3 overflow-hidden"
 					style={{ willChange: 'opacity' }}
 				>
+					{/* badge removed from here to avoid clipping */}
 					<div className="marquee__inner animate-marquee text-gray-900 text-sm md:text-lg font-semibold flex whitespace-nowrap">
 						<span className="pr-8 md:pr-12">Join Africa's premier platform for retirement readiness, financial security, and post-career productivity — Register today to secure your spot.</span>
 						<span className="pr-8 md:pr-12">Join Africa's premier platform for retirement readiness, financial security, and post-career productivity — Register today to secure your spot.</span>
@@ -135,6 +113,22 @@ export function HeroSection() {
 				</motion.div>
 
 				{/* Buttons - Inside Hero Section, Below Marquee */}
+				{/* Date/Location badge positioned over marquee (top-right) */}
+				<div className="absolute z-30 right-4 md:right-8 top-[56%] md:top-[50%] pointer-events-auto">
+					<div className="inline-flex items-center gap-3 px-4 py-3 rounded-lg bg-red-700 text-white font-black text-sm md:text-base shadow-lg">
+						<span className="flex items-center gap-3">
+							<Calendar className="w-4 h-4 md:w-5 md:h-5" />
+							<span className="hidden sm:inline">15-16 July 2026</span>
+							<span className="sm:hidden">Jul 15-16</span>
+						</span>
+						<span className="w-1 h-1 rounded-full bg-white/50" />
+						<span className="flex items-center gap-3">
+							<MapPin className="w-4 h-4 md:w-5 md:h-5" />
+							<span className="hidden sm:inline">Shehu Musa Yar-Aduas Center CBD</span>
+							<span className="sm:hidden">Musa Yar Aduas</span>
+						</span>
+					</div>
+				</div>
 				<div className="container mx-auto px-4 py-2 md:py-3 relative z-30">
 					<motion.div
 						initial={{ opacity: 0, y: 20 }}
