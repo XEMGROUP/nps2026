@@ -3,56 +3,90 @@ export async function generateTicketImage(data: {
   packageLabel: string
   summitName?: string
   orderId?: string
+  email?: string
+  specialRequest?: string
 }) {
-  const width = 800
-  const height = 450
+  const width = 700
+  const height = 1200
   const canvas = globalThis.document.createElement('canvas')
   canvas.width = width
   canvas.height = height
   const ctx = canvas.getContext('2d')!
 
-  // Background
-  ctx.fillStyle = '#ffffff'
+  // Background gradient (teal)
+  const g = ctx.createLinearGradient(0, 0, 0, height)
+  g.addColorStop(0, '#043434')
+  g.addColorStop(1, '#012a2a')
+  ctx.fillStyle = g
   ctx.fillRect(0, 0, width, height)
 
-  // Header
-  ctx.fillStyle = '#0f5132'
-  ctx.fillRect(0, 0, width, 80)
-  ctx.fillStyle = '#fff'
-  ctx.font = '28px sans-serif'
-  ctx.fillText(data.summitName || 'NPS 2026', 20, 50)
+  // Rounded ticket panel effect
+  ctx.fillStyle = 'rgba(255,255,255,0.03)'
+  const pad = 28
+  ctx.fillRect(pad, pad, width - pad * 2, height - pad * 2)
 
-  // Participant name
-  ctx.fillStyle = '#111827'
-  ctx.font = 'bold 36px sans-serif'
-  ctx.fillText(data.fullName, 20, 140)
+  // Square image placeholder (top center)
+  const imgSize = 220
+  const imgX = (width - imgSize) / 2
+  const imgY = 60
+  ctx.fillStyle = 'rgba(255,255,255,0.04)'
+  ctx.fillRect(imgX, imgY, imgSize, imgSize)
+  ctx.strokeStyle = 'rgba(255,255,255,0.06)'
+  ctx.lineWidth = 2
+  ctx.strokeRect(imgX + 4, imgY + 4, imgSize - 8, imgSize - 8)
 
-  // Package
-  ctx.font = '22px sans-serif'
-  ctx.fillStyle = '#374151'
-  ctx.fillText(data.packageLabel, 20, 190)
+  // Summit title
+  ctx.fillStyle = '#bfe8e5'
+  ctx.font = 'bold 28px sans-serif'
+  ctx.textAlign = 'center'
+  ctx.fillText(data.summitName || 'NPS 2026', width / 2, imgY + imgSize + 40)
 
-  // Order ID
-  ctx.font = '18px monospace'
-  ctx.fillStyle = '#6b7280'
-  ctx.fillText('Ref: ' + (data.orderId || 'N/A'), 20, 230)
+  // Details block (centered)
+  ctx.textAlign = 'left'
+  ctx.fillStyle = '#e7f7f6'
+  ctx.font = '16px sans-serif'
+  const left = 60
+  let y = imgY + imgSize + 80
 
-  // Simple barcode (visual) based on orderId
-  const code = data.orderId || String(Date.now())
-  const startX = 20
-  const startY = 260
-  const barHeight = 110
-  for (let i = 0; i < code.length; i++) {
-    const v = code.charCodeAt(i) % 2
-    ctx.fillStyle = v ? '#111' : '#eee'
-    const bw = 6
-    ctx.fillRect(startX + i * bw, startY, bw - 1, barHeight)
+  ctx.fillText('Date: March 20, 2025 — 7:00 PM', left, y)
+  y += 28
+  ctx.fillText('Location: Lagos, Nigeria', left, y)
+  y += 28
+  ctx.fillText('Ticket Type: ' + (data.packageLabel || 'REGULAR ACCESS'), left, y)
+  y += 28
+  ctx.fillText('Ordered on: ' + new Date().toLocaleString(), left, y)
+  y += 28
+  ctx.fillText('Ordered by: ' + (data.email || 'unknown'), left, y)
+  y += 28
+  if (data.specialRequest) {
+    ctx.fillText('Special Request: ' + data.specialRequest, left, y)
+    y += 28
   }
 
-  // Small footer info
-  ctx.font = '14px sans-serif'
-  ctx.fillStyle = '#6b7280'
-  ctx.fillText('Show this ticket at the entrance. Valid ID required.', 20, height - 20)
+  // Barcode panel
+  const panelY = y + 18
+  const panelH = 220
+  ctx.fillStyle = '#3b6b86'
+  ctx.fillRect(left, panelY, width - left * 2, panelH)
+
+  // Draw barcode-like bars
+  const code = (data.orderId || String(Date.now())) + (data.email || '')
+  const startX = left + 16
+  const startY = panelY + 24
+  const barHeight = 120
+  let x = startX
+  for (let i = 0; i < 80; i++) {
+    const w = 4 + (i % 3 === 0 ? 2 : 0)
+    ctx.fillStyle = (i % 2 === 0) ? '#071018' : '#ffffff'
+    ctx.fillRect(x, startY, w, barHeight)
+    x += w + 2
+  }
+
+  // Email below barcode
+  ctx.fillStyle = '#071018'
+  ctx.font = '18px monospace'
+  ctx.textAlign = 'center'
+  ctx.fillText((data.email || '').replace(/@/, '@'), width / 2, panelY + panelH - 18)
 
   return canvas.toDataURL('image/png')
 }

@@ -12,13 +12,14 @@ import { CheckCircle2, ArrowRight, User, Building2, Phone, Mail, Clock, Briefcas
 
 const titleOptions = ["Mr.", "Mrs.", "Ms.", "Dr.", "Prof.", "Engr.", "Chief", "Alhaji", "Hajiya"]
 
+// Place "Already retired" first per user request
 const yearsToRetirementOptions = [
+  "Already retired",
   "Less than 1 year",
   "1-2 years",
   "3-5 years",
   "6-10 years",
   "More than 10 years",
-  "Already retired"
 ]
 
 const digitalSkillsetOptions = [
@@ -42,6 +43,7 @@ export default function RegisterPage() {
     placeOfWork: "",
     department: "",
     designation: "",
+    countryCode: "+234",
     phoneNumber: "",
     email: "",
     yearsToRetirement: "",
@@ -192,6 +194,22 @@ export default function RegisterPage() {
     stopCamera()
   }
 
+  // Country codes list (West Africa + Pan-Africa)
+  const countryOptions = [
+    { code: '+234', name: 'Nigeria' },
+    { code: '+233', name: 'Ghana' },
+    { code: '+225', name: 'Ivory Coast' },
+    { code: '+221', name: 'Senegal' },
+    { code: '+231', name: 'Liberia' },
+    { code: '+232', name: 'Sierra Leone' },
+    { code: '+220', name: 'Gambia' },
+    { code: '+237', name: 'Cameroon' },
+    { code: '+254', name: 'Kenya' },
+    { code: '+27', name: 'South Africa' },
+    { code: '+20', name: 'Egypt' }
+  ]
+
+
   if (isSubmitted) {
     return (
       <div className="flex flex-col min-h-screen">
@@ -300,25 +318,35 @@ export default function RegisterPage() {
                         <h3 className="text-lg font-bold text-slate-900">Personal Information</h3>
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
                         <div>
                           <label htmlFor="title" className="block text-sm font-semibold text-slate-700 mb-2">Title *</label>
                           <select id="title" name="title" value={formData.title} onChange={handleChange} required className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-slate-800">
-                            <option value="">Select title</option>
+                            <option value="">Title</option>
                             {titleOptions.map(title => (<option key={title} value={title}>{title}</option>))}
                           </select>
                         </div>
 
                         <div className="md:col-span-2">
-                          <label htmlFor="fullName" className="block text-sm font-semibold text-slate-700 mb-2">Full Name (as it should appear on certificate) *</label>
+                          <label htmlFor="fullName" className="block text-sm font-semibold text-slate-700 mb-2">Full name *</label>
                           <input type="text" id="fullName" name="fullName" value={formData.fullName} onChange={handleChange} required placeholder="Enter your full name" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3" />
                         </div>
 
-                        <div>
+                        <div className="md:col-span-2">
                           <label htmlFor="phoneNumber" className="block text-sm font-semibold text-slate-700 mb-2">Phone Number *</label>
-                          <div className="relative">
-                            <Phone className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
-                            <input type="tel" id="phoneNumber" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} required placeholder="+234 XXX XXX XXXX" className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-4 py-3" />
+                          <div className="flex gap-3 items-center">
+                            <div className="min-w-[160px]">
+                              <select value={formData.countryCode} onChange={(e)=> setFormData(prev=>({...prev, countryCode: e.target.value}))} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm">
+                                {countryOptions.map(c=> (<option key={c.code} value={c.code}>{c.name} ({c.code})</option>))}
+                              </select>
+                            </div>
+
+                            <div className="flex-1">
+                              <div className="relative">
+                                <Phone className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
+                                <input type="tel" id="phoneNumber" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} required placeholder="812 345 6789" className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-4 py-3" />
+                              </div>
+                            </div>
                           </div>
                         </div>
 
@@ -358,6 +386,44 @@ export default function RegisterPage() {
                             <input type="text" id="designation" name="designation" value={formData.designation} onChange={handleChange} required placeholder="Enter your job title" className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-4 py-3" />
                           </div>
                         </div>
+
+                            {/* Photo inside personal info */}
+                            <div className="mb-8">
+                              <h4 className="text-md font-semibold text-slate-900 mb-2">Profile photo</h4>
+                              <p className="text-sm text-slate-600 mb-3">Add a clear headshot — use camera or upload an image.</p>
+                              <div className="flex items-start gap-6">
+                                <div>
+                                  {!showCamera ? (
+                                    <div className="flex flex-col gap-3">
+                                      <button type="button" onClick={startCamera} className="px-4 py-2 bg-emerald-600 text-white rounded-xl shadow">Use camera</button>
+                                      <label className="inline-block">
+                                        <span className="sr-only">Upload photo</span>
+                                        <input accept="image/*" type="file" onChange={(e)=>{ const f = e.target.files?.[0]; if(!f) return; const r = new FileReader(); r.onload = ()=> setPhotoDataUrl(String(r.result)); r.readAsDataURL(f); }} className="hidden" />
+                                        <span className="mt-2 inline-flex items-center justify-center px-4 py-2 bg-white border rounded-xl text-sm shadow cursor-pointer">Choose file</span>
+                                      </label>
+                                    </div>
+                                  ) : (
+                                    <div className="flex flex-col gap-2">
+                                      <video ref={videoRef} className="w-64 h-40 bg-black rounded-md object-cover" playsInline muted autoPlay />
+                                      <div className="flex gap-2">
+                                        <button type="button" onClick={capturePhoto} className="px-4 py-2 bg-emerald-600 text-white rounded-xl">Capture</button>
+                                        <button type="button" onClick={stopCamera} className="px-4 py-2 bg-gray-200 rounded-xl">Cancel</button>
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+
+                                <div>
+                                  {photoDataUrl ? (
+                                    <div className="w-36 h-36 rounded-md overflow-hidden shadow-lg">
+                                      <img src={photoDataUrl} className="w-full h-full object-cover" />
+                                    </div>
+                                  ) : (
+                                    <div className="w-36 h-36 bg-gray-100 rounded-md flex items-center justify-center text-sm text-slate-500">No photo</div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
                       </div>
                     </div>
 
@@ -419,38 +485,22 @@ export default function RegisterPage() {
                   </>
                 )}
 
-                {/* Step 4: Photo & finalize */}
+                {/* Step 4: Payment (online) or finalise */}
                 {step === 4 && (
                   <div className="mb-8">
-                    <h3 className="text-lg font-bold text-slate-900 mb-3">Profile photo</h3>
-                    <p className="text-sm text-slate-600 mb-3">Take a photo with your camera or upload an image.</p>
-                    <div className="flex flex-col md:flex-row items-start gap-4">
-                      <div>
-                        {!showCamera ? (
-                          <div className="flex flex-col gap-2">
-                            <button type="button" onClick={startCamera} className="px-4 py-2 bg-emerald-600 text-white rounded-md">Use camera</button>
-                            <label className="inline-block">
-                              <span className="sr-only">Upload photo</span>
-                              <input accept="image/*" type="file" onChange={(e)=>{ const f = e.target.files?.[0]; if(!f) return; const r = new FileReader(); r.onload = ()=> setPhotoDataUrl(String(r.result)); r.readAsDataURL(f); }} className="mt-2" />
-                            </label>
-                          </div>
-                        ) : (
-                          <div className="flex flex-col gap-2">
-                            <video ref={videoRef} className="w-64 h-40 bg-black rounded-md" playsInline muted />
-                            <div className="flex gap-2">
-                              <button type="button" onClick={capturePhoto} className="px-4 py-2 bg-emerald-600 text-white rounded-md">Capture</button>
-                              <button type="button" onClick={stopCamera} className="px-4 py-2 bg-gray-200 rounded-md">Cancel</button>
-                            </div>
-                          </div>
-                        )}
+                    <h3 className="text-lg font-bold text-slate-900 mb-3">Payment</h3>
+                    <p className="text-sm text-slate-600">You selected <strong className="text-slate-900">{packages.find(p=>p.id===selectedPackage)?.name}</strong>. Proceed to complete your payment online to receive your ticket immediately.</p>
+                    <div className="mt-6 p-4 bg-gray-50 rounded-xl">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="text-sm text-slate-600">Package</div>
+                          <div className="font-semibold text-slate-900">{packages.find(p=>p.id===selectedPackage)?.name}</div>
+                        </div>
+                        <div className="text-2xl font-bold text-emerald-600">{packages.find(p=>p.id===selectedPackage)?.price}</div>
                       </div>
-
-                      <div>
-                        {photoDataUrl ? (
-                          <img src={photoDataUrl} className="mt-3 w-40 h-40 object-cover rounded-md" />
-                        ) : (
-                          <div className="mt-3 w-40 h-40 bg-gray-100 rounded-md flex items-center justify-center text-sm text-slate-500">No photo selected</div>
-                        )}
+                      <div className="mt-6 flex gap-3">
+                        <button type="button" onClick={handleFinalise} className="px-4 py-3 bg-emerald-600 text-white rounded-xl shadow">Pay Now</button>
+                        <button type="button" onClick={()=>setStep(3)} className="px-4 py-3 rounded-xl border">Back</button>
                       </div>
                     </div>
                     {ticketUrl && (
@@ -474,7 +524,18 @@ export default function RegisterPage() {
                 {/* Navigation Buttons */}
                 <div className="flex gap-3">
                   {step > 1 && <button type="button" onClick={()=>setStep(s=>s-1)} className="px-4 py-3 rounded-md border">Back</button>}
-                  {step < totalSteps && <button type="button" onClick={() => { if(step===1){ if(!selectedPackage) return alert('Please select a package'); setStep(2); return } if(step===2){ if(!paymentOption) return alert('Please choose a payment option'); setStep(3); return } if(step===3){ setStep(4); return } }} className="ml-auto px-4 py-3 rounded-md bg-emerald-600 text-white">Continue</button>}
+                  {step < totalSteps && <button type="button" onClick={async () => {
+                    if(step===1){ if(!selectedPackage) return alert('Please select a package'); setStep(2); return }
+                    if(step===2){ if(!paymentOption) return alert('Please choose a payment option'); setStep(3); return }
+                    if(step===3){
+                      // If user chose online payment, proceed to payment step; otherwise finalise and generate ticket
+                      if(paymentOption === 'online'){
+                        setStep(4); return
+                      } else {
+                        await handleFinalise(); return
+                      }
+                    }
+                  }} className="ml-auto px-4 py-3 rounded-md bg-emerald-600 text-white">Continue</button>}
                   {step === totalSteps && <button type="button" onClick={handleFinalise} disabled={isSubmitting} className="ml-auto px-4 py-3 rounded-md bg-emerald-600 text-white">{isSubmitting ? 'Processing...' : (paymentOption==='online' ? 'Pay & Generate Ticket' : 'Generate Ticket')}</button>}
                 </div>
               </motion.form>
