@@ -228,6 +228,18 @@ export default function RegisterPage() {
               <p className="text-slate-600 mb-8">
                 Thank you for registering for NPS 2026. You will receive a confirmation email shortly with further details about the summit.
               </p>
+              {ticketUrl ? (
+                <div className="mb-6">
+                  <h2 className="text-lg font-semibold mb-3">Your Ticket</h2>
+                  <div className="max-w-sm mx-auto mb-3">
+                    <img src={ticketUrl} alt="ticket" className="w-full rounded-md border" />
+                  </div>
+                  <div className="flex gap-3 justify-center">
+                    <a href={ticketUrl} download={`NPS2026-ticket-${formData.fullName||'guest'}.png`} className="px-4 py-2 bg-emerald-600 text-white rounded-xl">Download Ticket</a>
+                    <a href={ticketUrl} target="_blank" rel="noreferrer" className="px-4 py-2 rounded-xl border">Open in new tab</a>
+                  </div>
+                </div>
+              ) : null}
               <a
                 href="/"
                 className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-xl font-bold transition-colors"
