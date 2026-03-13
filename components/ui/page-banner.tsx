@@ -58,12 +58,12 @@ export function PageBanner({ title, subtitle }: PageBannerProps) {
           transition={{ duration: 0.45 }}
           className="mb-4"
         >
-          <div className="w-40 h-20 relative mx-auto">
+          <div className="w-56 h-28 md:w-72 md:h-36 relative mx-auto">
             <Image
               src="/images/logos/optimized/npslogo.webp"
               alt="NPS 2026"
               fill
-              sizes="160px"
+              sizes="(min-width: 768px) 288px, 224px"
               className="object-contain"
             />
           </div>
@@ -86,11 +86,11 @@ export function PageBanner({ title, subtitle }: PageBannerProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className="text-lg md:text-xl text-white/80 max-w-2xl flex items-center gap-2 justify-center"
+            className="text-lg md:text-xl text-white/80 max-w-2xl flex items-center gap-2 justify-center whitespace-nowrap overflow-hidden"
             style={{ willChange: 'opacity, transform' }}
           >
-            <span>Secure your place at Nigeria's premier</span>
-            <span className="relative inline-block w-[18rem] md:w-[26rem] text-left">
+            <span className="font-medium">Secure your place at Nigeria's premier</span>
+            <span className="relative inline-block ml-3 text-left">
               <motion.span
                 key={rotIndex}
                 initial={{ opacity: 0, y: 4 }}

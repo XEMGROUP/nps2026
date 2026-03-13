@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { PageBanner } from "@/components/ui/page-banner"
@@ -58,6 +58,9 @@ export default function RegisterPage() {
   const [paymentOption, setPaymentOption] = useState<'online'|'later'|null>(null)
   const [photoDataUrl, setPhotoDataUrl] = useState<string | null>(null)
   const [ticketUrl, setTicketUrl] = useState<string | null>(null)
+  const [showCamera, setShowCamera] = useState(false)
+  const videoRef = useRef<HTMLVideoElement | null>(null)
+  const streamRef = useRef<MediaStream | null>(null)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -137,6 +140,55 @@ export default function RegisterPage() {
     } finally {
       setIsSubmitting(false)
     }
+  }
+
+  useEffect(() => {
+    return () => {
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(t => t.stop())
+        streamRef.current = null
+      }
+    }
+  }, [])
+
+  const startCamera = async () => {
+    try {
+      const s = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+      streamRef.current = s
+      if (videoRef.current) {
+        videoRef.current.srcObject = s
+        await videoRef.current.play()
+      }
+      setShowCamera(true)
+    } catch (err) {
+      alert('Unable to access camera')
+    }
+  }
+
+  const stopCamera = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(t => t.stop())
+      streamRef.current = null
+    }
+    if (videoRef.current) {
+      videoRef.current.pause()
+      // @ts-ignore
+      videoRef.current.srcObject = null
+    }
+    setShowCamera(false)
+  }
+
+  const capturePhoto = () => {
+    const v = videoRef.current
+    if (!v) return
+    const canvas = document.createElement('canvas')
+    canvas.width = v.videoWidth || 640
+    canvas.height = v.videoHeight || 480
+    const ctx = canvas.getContext('2d')!
+    ctx.drawImage(v, 0, 0, canvas.width, canvas.height)
+    const data = canvas.toDataURL('image/png')
+    setPhotoDataUrl(data)
+    stopCamera()
   }
 
   if (isSubmitted) {
@@ -370,8 +422,35 @@ export default function RegisterPage() {
                   <div className="mb-8">
                     <h3 className="text-lg font-bold text-slate-900 mb-3">Profile photo</h3>
                     <p className="text-sm text-slate-600 mb-3">Take a photo with your camera or upload an image.</p>
-                    <input accept="image/*" capture="environment" type="file" onChange={(e)=>{ const f = e.target.files?.[0]; if(!f) return; const r = new FileReader(); r.onload = ()=> setPhotoDataUrl(String(r.result)); r.readAsDataURL(f); }} />
-                    {photoDataUrl && <img src={photoDataUrl} className="mt-3 w-40 h-40 object-cover rounded-md" />}
+                    <div className="flex flex-col md:flex-row items-start gap-4">
+                      <div>
+                        {!showCamera ? (
+                          <div className="flex flex-col gap-2">
+                            <button type="button" onClick={startCamera} className="px-4 py-2 bg-emerald-600 text-white rounded-md">Use camera</button>
+                            <label className="inline-block">
+                              <span className="sr-only">Upload photo</span>
+                              <input accept="image/*" type="file" onChange={(e)=>{ const f = e.target.files?.[0]; if(!f) return; const r = new FileReader(); r.onload = ()=> setPhotoDataUrl(String(r.result)); r.readAsDataURL(f); }} className="mt-2" />
+                            </label>
+                          </div>
+                        ) : (
+                          <div className="flex flex-col gap-2">
+                            <video ref={videoRef} className="w-64 h-40 bg-black rounded-md" playsInline muted />
+                            <div className="flex gap-2">
+                              <button type="button" onClick={capturePhoto} className="px-4 py-2 bg-emerald-600 text-white rounded-md">Capture</button>
+                              <button type="button" onClick={stopCamera} className="px-4 py-2 bg-gray-200 rounded-md">Cancel</button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      <div>
+                        {photoDataUrl ? (
+                          <img src={photoDataUrl} className="mt-3 w-40 h-40 object-cover rounded-md" />
+                        ) : (
+                          <div className="mt-3 w-40 h-40 bg-gray-100 rounded-md flex items-center justify-center text-sm text-slate-500">No photo selected</div>
+                        )}
+                      </div>
+                    </div>
                     {ticketUrl && (
                       <div className="mt-4">
                         <h5 className="font-semibold mb-2">Your ticket</h5>
