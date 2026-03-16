@@ -104,14 +104,14 @@ export function Header() {
         {/* CTA Button */}
         <Link
           href="/register"
-          className="hidden lg:block bg-emerald-600 text-white px-8 py-3 rounded-lg text-sm font-bold tracking-wide uppercase shadow-lg shadow-emerald-600/30 hover:shadow-xl hover:bg-red-600 transition-all duration-300 lg:ml-4 lg:mr-28"
+          className="hidden lg:block bg-emerald-600 text-white px-8 py-3 rounded-lg text-sm font-bold tracking-wide uppercase shadow-lg shadow-emerald-600/30 hover:shadow-xl hover:bg-red-600 transition-all duration-300 lg:ml-4 lg:mr-32"
         >
           Register Now
         </Link>
 
         {/* TRHL logo: positioned at header right and overlaps header/hero */}
-        <div className="hidden lg:block absolute top-full right-8 -translate-y-1/2 z-50 pointer-events-none">
-          <div className="w-40 lg:w-48">
+        <div className="hidden lg:block absolute top-full right-2 -translate-y-1/2 z-50 pointer-events-none">
+          <div className="w-32 lg:w-36">
             <Image
               src="/images/logos/optimized/TRHL.webp"
               alt="TRHL"

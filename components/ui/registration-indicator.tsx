@@ -16,12 +16,12 @@ export function RegistrationIndicator() {
     const t = setInterval(() => {
       setCount((c) => c + (Math.random() > 0.6 ? 2 : 1))
       setMsgIndex((i) => (i + 1) % messages.length)
-    }, 3500)
+    }, 7000)
     return () => clearInterval(t)
   }, [])
 
   return (
-    <div className="mx-auto mt-6 inline-flex items-center gap-3 bg-white/90 border border-gray-200 px-4 py-2 rounded-xl shadow-sm">
+    <div className="mx-auto mt-6 inline-flex items-center gap-3 bg-red-100 border border-red-200 px-4 py-2 rounded-xl shadow-sm">
       <div className="text-sm text-slate-700 font-semibold">{count}</div>
       <div className="text-sm text-slate-600">{messages[msgIndex]}</div>
     </div>

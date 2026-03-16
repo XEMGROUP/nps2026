@@ -9,6 +9,7 @@ import { Progress } from '@/components/ui/progress'
 import generateTicketImage from '@/lib/generateTicket'
 import RegistrationIndicator from '@/components/ui/registration-indicator'
 import { CheckCircle2, ArrowRight, User, Building2, Phone, Mail, Clock, Briefcase, Lightbulb, Shield } from "lucide-react"
+import Webcam from 'react-webcam'
 
 const titleOptions = ["Mr.", "Mrs.", "Ms.", "Dr.", "Prof.", "Engr.", "Chief", "Alhaji", "Hajiya"]
 
@@ -61,8 +62,7 @@ export default function RegisterPage() {
   const [photoDataUrl, setPhotoDataUrl] = useState<string | null>(null)
   const [ticketUrl, setTicketUrl] = useState<string | null>(null)
   const [showCamera, setShowCamera] = useState(false)
-  const videoRef = useRef<HTMLVideoElement | null>(null)
-  const streamRef = useRef<MediaStream | null>(null)
+  const webcamRef = useRef<Webcam | null>(null)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -147,51 +147,27 @@ export default function RegisterPage() {
 
   useEffect(() => {
     return () => {
-      if (streamRef.current) {
-        streamRef.current.getTracks().forEach(t => t.stop())
-        streamRef.current = null
-      }
+      // Cleanup handled by react-webcam
     }
   }, [])
 
-  const startCamera = async () => {
-    try {
-      const s = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
-      streamRef.current = s
-      if (videoRef.current) {
-        videoRef.current.srcObject = s
-        await videoRef.current.play()
-      }
-      setShowCamera(true)
-    } catch (err) {
-      alert('Unable to access camera')
-    }
+  const startCamera = () => {
+    setShowCamera(true)
   }
 
   const stopCamera = () => {
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach(t => t.stop())
-      streamRef.current = null
-    }
-    if (videoRef.current) {
-      videoRef.current.pause()
-      // @ts-ignore
-      videoRef.current.srcObject = null
-    }
     setShowCamera(false)
   }
 
   const capturePhoto = () => {
-    const v = videoRef.current
-    if (!v) return
-    const canvas = document.createElement('canvas')
-    canvas.width = v.videoWidth || 640
-    canvas.height = v.videoHeight || 480
-    const ctx = canvas.getContext('2d')!
-    ctx.drawImage(v, 0, 0, canvas.width, canvas.height)
-    const data = canvas.toDataURL('image/png')
-    setPhotoDataUrl(data)
-    stopCamera()
+    const webcam = webcamRef.current
+    if (!webcam) return
+
+    const imageSrc = webcam.getScreenshot()
+    if (imageSrc) {
+      setPhotoDataUrl(imageSrc)
+      stopCamera()
+    }
   }
 
   // Country codes list (West Africa + Pan-Africa)
@@ -264,10 +240,12 @@ export default function RegisterPage() {
           subtitle="Secure your place at Nigeria's premier pre-retirement summit"
         />
 
-        <section className="py-16 bg-gray-50">
+        <section className="py-8 bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto">
-              <RegistrationIndicator />
+              <div className="flex justify-center">
+                <RegistrationIndicator />
+              </div>
               {/* Form Introduction */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -373,124 +351,143 @@ export default function RegisterPage() {
                     </div>
 
                     <div className="mb-10">
-                      <div className="flex items-center gap-3 mb-6">
-                        <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-                          <Building2 className="w-5 h-5 text-orange-600" />
-                        </div>
-                        <h3 className="text-lg font-bold text-slate-900">Work Information</h3>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="md:col-span-2">
-                          <label htmlFor="placeOfWork" className="block text-sm font-semibold text-slate-700 mb-2">Place of Work *</label>
-                          <input type="text" id="placeOfWork" name="placeOfWork" value={formData.placeOfWork} onChange={handleChange} required placeholder="Enter your organization/company name" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3" />
-                        </div>
-
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div>
-                          <label htmlFor="department" className="block text-sm font-semibold text-slate-700 mb-2">Department *</label>
-                          <input type="text" id="department" name="department" value={formData.department} onChange={handleChange} required placeholder="Enter your department" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3" />
-                        </div>
-
-                        <div>
-                          <label htmlFor="designation" className="block text-sm font-semibold text-slate-700 mb-2">Designation/Job Title *</label>
-                          <div className="relative">
-                            <Briefcase className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
-                            <input type="text" id="designation" name="designation" value={formData.designation} onChange={handleChange} required placeholder="Enter your job title" className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-4 py-3" />
+                          <div className="flex items-center gap-3 mb-6">
+                            <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                              <Building2 className="w-5 h-5 text-orange-600" />
+                            </div>
+                            <h3 className="text-lg font-bold text-slate-900">Work Information</h3>
                           </div>
-                        </div>
 
-                            {/* Photo inside personal info */}
-                            <div className="mb-8">
-                              <h4 className="text-md font-semibold text-slate-900 mb-2">Profile photo</h4>
-                              <p className="text-sm text-slate-600 mb-3">Add a clear headshot — use camera or upload an image.</p>
-                              <div className="flex items-start gap-6">
-                                <div>
-                                  {!showCamera ? (
-                                    <div className="flex flex-col gap-3">
-                                      <button type="button" onClick={startCamera} className="px-4 py-2 bg-emerald-600 text-white rounded-xl shadow">Use camera</button>
-                                      <label className="inline-block">
-                                        <span className="sr-only">Upload photo</span>
-                                        <input accept="image/*" type="file" onChange={(e)=>{ const f = e.target.files?.[0]; if(!f) return; const r = new FileReader(); r.onload = ()=> setPhotoDataUrl(String(r.result)); r.readAsDataURL(f); }} className="hidden" />
-                                        <span className="mt-2 inline-flex items-center justify-center px-4 py-2 bg-white border rounded-xl text-sm shadow cursor-pointer">Choose file</span>
-                                      </label>
-                                    </div>
-                                  ) : (
-                                    <div className="flex flex-col gap-2">
-                                      <video ref={videoRef} className="w-64 h-40 bg-black rounded-md object-cover" playsInline muted autoPlay />
-                                      <div className="flex gap-2">
-                                        <button type="button" onClick={capturePhoto} className="px-4 py-2 bg-emerald-600 text-white rounded-xl">Capture</button>
-                                        <button type="button" onClick={stopCamera} className="px-4 py-2 bg-gray-200 rounded-xl">Cancel</button>
-                                      </div>
-                                    </div>
-                                  )}
-                                </div>
+                          <div className="grid grid-cols-1 gap-6">
+                            <div>
+                              <label htmlFor="placeOfWork" className="block text-sm font-semibold text-slate-700 mb-2">Place of Work *</label>
+                              <input type="text" id="placeOfWork" name="placeOfWork" value={formData.placeOfWork} onChange={handleChange} required placeholder="Enter your organization/company name" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3" />
+                            </div>
 
-                                <div>
-                                  {photoDataUrl ? (
-                                    <div className="w-36 h-36 rounded-md overflow-hidden shadow-lg">
-                                      <img src={photoDataUrl} className="w-full h-full object-cover" />
-                                    </div>
-                                  ) : (
-                                    <div className="w-36 h-36 bg-gray-100 rounded-md flex items-center justify-center text-sm text-slate-500">No photo</div>
-                                  )}
-                                </div>
+                            <div>
+                              <label htmlFor="department" className="block text-sm font-semibold text-slate-700 mb-2">Department *</label>
+                              <input type="text" id="department" name="department" value={formData.department} onChange={handleChange} required placeholder="Enter your department" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3" />
+                            </div>
+
+                            <div>
+                              <label htmlFor="designation" className="block text-sm font-semibold text-slate-700 mb-2">Designation/Job Title *</label>
+                              <div className="relative">
+                                <Briefcase className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
+                                <input type="text" id="designation" name="designation" value={formData.designation} onChange={handleChange} required placeholder="Enter your job title" className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-4 py-3" />
                               </div>
                             </div>
-                      </div>
-                    </div>
-
-                    <div className="mb-10">
-                      <div className="flex items-center gap-3 mb-6">
-                        <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
-                          <Clock className="w-5 h-5 text-slate-700" />
-                        </div>
-                        <h3 className="text-lg font-bold text-slate-900">Retirement Information</h3>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                          <label htmlFor="yearsToRetirement" className="block text-sm font-semibold text-slate-700 mb-2">How many years to retirement? *</label>
-                          <select id="yearsToRetirement" name="yearsToRetirement" value={formData.yearsToRetirement} onChange={handleChange} required className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3">
-                            <option value="">Select an option</option>
-                            {yearsToRetirementOptions.map(option => (<option key={option} value={option}>{option}</option>))}
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="mb-10">
-                      <div className="flex items-center gap-3 mb-6">
-                        <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
-                          <Lightbulb className="w-5 h-5 text-emerald-700" />
-                        </div>
-                        <h3 className="text-lg font-bold text-slate-900">Additional Information</h3>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                          <label htmlFor="investmentAdvisory" className="block text-sm font-semibold text-slate-700 mb-2">Are you interested in investment advisory? *</label>
-                          <div className="flex gap-4">
-                            <label className="flex items-center gap-2 cursor-pointer">
-                              <input type="radio" name="investmentAdvisory" value="yes" checked={formData.investmentAdvisory === "yes"} onChange={handleChange} required className="w-5 h-5 text-emerald-600" />
-                              <span className="text-slate-700">Yes</span>
-                            </label>
-                            <label className="flex items-center gap-2 cursor-pointer">
-                              <input type="radio" name="investmentAdvisory" value="no" checked={formData.investmentAdvisory === "no"} onChange={handleChange} className="w-5 h-5 text-emerald-600" />
-                              <span className="text-slate-700">No</span>
-                            </label>
-                            <label className="flex items-center gap-2 cursor-pointer">
-                              <input type="radio" name="investmentAdvisory" value="maybe" checked={formData.investmentAdvisory === "maybe"} onChange={handleChange} className="w-5 h-5 text-emerald-600" />
-                              <span className="text-slate-700">Maybe</span>
-                            </label>
                           </div>
                         </div>
 
-                        <div>
-                          <label htmlFor="digitalSkillset" className="block text-sm font-semibold text-slate-700 mb-2">What digital skills do you have? *</label>
-                          <select id="digitalSkillset" name="digitalSkillset" value={formData.digitalSkillset} onChange={handleChange} required className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3">
-                            <option value="">Select your skill level</option>
-                            {digitalSkillsetOptions.map(option => (<option key={option} value={option}>{option}</option>))}
-                          </select>
+                        <div className="grid grid-cols-1 gap-6">
+                          <div>
+                            <div className="flex items-center gap-3 mb-6">
+                              <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
+                                <Lightbulb className="w-5 h-5 text-emerald-700" />
+                              </div>
+                              <h3 className="text-lg font-bold text-slate-900">Additional Information</h3>
+                            </div>
+
+                            <div className="grid grid-cols-1 gap-6">
+                              <div>
+                                <label htmlFor="investmentAdvisory" className="block text-sm font-semibold text-slate-700 mb-2">Are you interested in investment advisory? *</label>
+                                <div className="flex gap-4">
+                                  <label className="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="investmentAdvisory" value="yes" checked={formData.investmentAdvisory === "yes"} onChange={handleChange} required className="w-5 h-5 text-emerald-600" />
+                                    <span className="text-slate-700">Yes</span>
+                                  </label>
+                                  <label className="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="investmentAdvisory" value="no" checked={formData.investmentAdvisory === "no"} onChange={handleChange} className="w-5 h-5 text-emerald-600" />
+                                    <span className="text-slate-700">No</span>
+                                  </label>
+                                  <label className="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="investmentAdvisory" value="maybe" checked={formData.investmentAdvisory === "maybe"} onChange={handleChange} className="w-5 h-5 text-emerald-600" />
+                                    <span className="text-slate-700">Maybe</span>
+                                  </label>
+                                </div>
+                              </div>
+
+                              <div>
+                                <label htmlFor="digitalSkillset" className="block text-sm font-semibold text-slate-700 mb-2">What digital skills do you have? *</label>
+                                <select id="digitalSkillset" name="digitalSkillset" value={formData.digitalSkillset} onChange={handleChange} required className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3">
+                                  <option value="">Select your skill level</option>
+                                  {digitalSkillsetOptions.map(option => (<option key={option} value={option}>{option}</option>))}
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div>
+                            <div className="flex items-center gap-3 mb-6">
+                              <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
+                                <Clock className="w-5 h-5 text-slate-700" />
+                              </div>
+                              <h3 className="text-lg font-bold text-slate-900">Retirement Information</h3>
+                            </div>
+
+                            <div className="grid grid-cols-1 gap-6">
+                              <div>
+                                <label htmlFor="yearsToRetirement" className="block text-sm font-semibold text-slate-700 mb-2">How many years to retirement? *</label>
+                                <select id="yearsToRetirement" name="yearsToRetirement" value={formData.yearsToRetirement} onChange={handleChange} required className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3">
+                                  <option value="">Select an option</option>
+                                  {yearsToRetirementOptions.map(option => (<option key={option} value={option}>{option}</option>))}
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Profile Photo Section - Full Width */}
+                    <div className="mb-10">
+                      <h4 className="text-md font-semibold text-slate-900 mb-2">Profile photo</h4>
+                      <div className="flex flex-col lg:flex-row items-start lg:items-center gap-6">
+                        <div className="flex flex-col gap-3 lg:w-48 lg:h-80 lg:justify-center lg:items-center">
+                          {!showCamera ? (
+                            <>
+                              <button type="button" onClick={startCamera} className="w-full px-4 py-3 bg-emerald-600 text-white rounded-xl shadow text-center">Use camera</button>
+                              <label className="inline-block w-full">
+                                <span className="sr-only">Upload photo</span>
+                                <input accept="image/*" type="file" onChange={(e)=>{ const f = e.target.files?.[0]; if(!f) return; const r = new FileReader(); r.onload = ()=> setPhotoDataUrl(String(r.result)); r.readAsDataURL(f); }} className="hidden" />
+                                <span className="w-full inline-flex items-center justify-center px-4 py-3 bg-white border rounded-xl text-sm shadow cursor-pointer text-center">Choose file</span>
+                              </label>
+                            </>
+                          ) : (
+                            <>
+                              <button type="button" onClick={capturePhoto} className="w-full px-4 py-3 bg-emerald-600 text-white rounded-xl text-center">Capture</button>
+                              <button type="button" onClick={stopCamera} className="w-full px-4 py-3 bg-gray-200 rounded-xl text-center">Cancel</button>
+                            </>
+                          )}
+                        </div>
+
+                        <div className="flex-1 flex justify-center lg:justify-end">
+                          {showCamera ? (
+                            <Webcam
+                              ref={webcamRef}
+                              audio={false}
+                              screenshotFormat="image/png"
+                              videoConstraints={{
+                                facingMode: { ideal: 'environment' }
+                              }}
+                              className="w-full max-w-sm h-64 lg:h-80 rounded-md object-cover"
+                              onUserMediaError={(error) => {
+                                console.error('Webcam error:', error)
+                                alert('Unable to access camera. Please check permissions.')
+                                stopCamera()
+                              }}
+                            />
+                          ) : photoDataUrl ? (
+                            <div className="w-full max-w-sm h-64 lg:h-80 rounded-md overflow-hidden shadow-lg">
+                              <img src={photoDataUrl} className="w-full h-full object-cover" />
+                            </div>
+                          ) : (
+                            <div className="w-full max-w-sm h-64 lg:h-80 bg-gray-100 rounded-md flex items-center justify-center text-center font-bold text-slate-600 px-4">
+                              Add a clear headshot — use camera or upload an image
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>

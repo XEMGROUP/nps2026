@@ -87,11 +87,11 @@ export function PageBanner({ title, subtitle }: PageBannerProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className="text-lg md:text-xl text-white/80 max-w-2xl flex items-center gap-2 justify-center whitespace-nowrap"
+            className="text-lg md:text-xl text-white/80 max-w-2xl flex flex-col md:flex-row items-center gap-2 justify-center whitespace-normal md:whitespace-nowrap text-center md:text-left"
             style={{ willChange: 'opacity, transform' }}
           >
             <span className="font-medium">Secure your place at Nigeria's premier</span>
-            <span className="relative inline-block ml-2 text-left">
+            <span className="relative inline-block text-left md:text-left">
               {/* reserve width using the longest phrase to prevent clipping or layout shift */}
               <span className="invisible absolute left-0 top-0">{reserveText}</span>
               <motion.span
@@ -100,7 +100,7 @@ export function PageBanner({ title, subtitle }: PageBannerProps) {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -4 }}
                 transition={{ duration: 0.6 }}
-                className="inline-block font-semibold"
+                className="inline-block font-semibold md:inline-block"
                 style={{ display: 'inline-block' }}
               >
                 {rotatingPhrases[rotIndex]}
