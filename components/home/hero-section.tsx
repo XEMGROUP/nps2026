@@ -44,6 +44,12 @@ export function HeroSection() {
 
 			{/* Decorative centered logo behind text (above gradient, below content) */}
 			<div className="absolute top-6 left-1/2 -translate-x-1/2 z-20 pointer-events-none opacity-100 w-64 md:w-96 lg:w-[28rem]">
+				{/* Yellow 2026 text above logo */}
+				<div className="text-center mb-4">
+					<span className="text-yellow-300 text-2xl md:text-3xl lg:text-4xl font-black tracking-tight">
+						2026
+					</span>
+				</div>
 				<Image
 					src="/images/logos/optimized/NPSlogoWhite.webp"
 					alt="NPS decorative logo"

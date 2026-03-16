@@ -45,8 +45,8 @@ export function Summit2025() {
     <section 
       className="py-12 relative overflow-hidden"
       style={{
-        background: `linear-gradient(135deg, #CC3300 0%, #016633 100%)`,
-      }}
+          background: `linear-gradient(225deg, #CC3300 0%, #016633 100%)`,
+        }}
     >
       {/* Background Image Overlay */}
       <div

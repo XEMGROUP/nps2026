@@ -11,14 +11,14 @@ type Tier = {
 }
 
 const TIERS: Tier[] = [
-  { id: 'free', title: 'Free', price: 0, subtitle: 'REGULAR ACCESS' },
-  { id: '100', title: '$100', price: 100, subtitle: 'VIP ACCESS' },
-  { id: '150', title: '$150', price: 150, subtitle: 'VVIP ACCESS' },
+  { id: 'participant', title: '$200', price: 200, subtitle: 'PARTICIPANT PACKAGE' },
+  { id: 'vip', title: '$350', price: 350, subtitle: 'VIP PACKAGE' },
+  { id: 'vvip', title: '$500', price: 500, subtitle: 'VVIP PACKAGE' },
 ]
 
 const summit = {
-  title: 'Tech Nation',
-  date: 'March 20, 2025 — 7:00 PM',
+  title: 'National Pre-Retirement Summit',
+  date: 'July 15 - 16, 2026',
   location: 'Lagos, Nigeria',
 }
 
@@ -41,6 +41,9 @@ export default function TicketWizard() {
     '/tickets/three.png',
     '/tickets/ticket.png',
   ]
+
+  const logoLeft = encodeURI('/images/logos/optimized/NPSlogoWhite.webp')
+  const logoRight = encodeURI('/images/logos/optimized/XEM Consultants Ltd Logo w.webp')
 
   async function handleCheckout() {
     setLoading(true)
@@ -176,7 +179,7 @@ export default function TicketWizard() {
             <p className="text-sm mb-4">Check your email for a copy or download it below.</p>
 
             <div className="bg-white p-6 rounded-xl border border-gray-200 mb-4 inline-block">
-              <div className="w-[320px]">
+              <div className="w-[320px] text-left">
                 <div className="w-full h-28 bg-slate-100 rounded-md mb-4 flex items-center justify-center">
                   {photoPreview ? (
                     <img src={photoPreview} alt="ticket-photo" className="w-20 h-20 object-cover rounded-full border" />
@@ -188,9 +191,25 @@ export default function TicketWizard() {
                 <p className="text-sm font-medium">{summit.title}</p>
                 <p className="text-xs mt-2">Date: {summit.date}</p>
                 <p className="text-xs">Location: {summit.location}</p>
-                <p className="text-xs">Ticket Type: {selectedTier.subtitle}</p>
+
+                <div className="mt-3 flex items-center justify-center gap-4">
+                  <img src={logoLeft} alt="left-logo" className="w-20 h-12 object-contain" />
+
+                  <div className="p-2 bg-white rounded-md shadow-inner border">
+                    <div className="w-24 h-24 bg-slate-200 flex items-center justify-center">QR</div>
+                  </div>
+
+                  <img src={logoRight} alt="right-logo" className="w-28 h-12 object-contain" />
+                </div>
+
+                <p className="text-xs mt-3">Ticket Type: {selectedTier.subtitle}</p>
                 <p className="text-xs">Ordered on: {new Date().toLocaleString()}</p>
                 <p className="text-xs">Special Request: {special || 'none'}</p>
+
+                <div className="mt-3 text-center opacity-90">
+                  <div className="text-2xl font-black italic">NPS</div>
+                  <p className="text-xs text-slate-500 mt-1">Own Your retirement</p>
+                </div>
               </div>
             </div>
 

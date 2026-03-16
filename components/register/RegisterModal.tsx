@@ -46,7 +46,7 @@ export function RegisterModal() {
   }
 
   const generateAndSetTicket = async (orderId?: string) => {
-    const dataUrl = await generateTicketImage({ fullName: form.fullName || 'Guest', packageLabel: packages.find(p=>p.id===form.package)?.label||'Participant', summitName: 'NPS 2026', orderId })
+    const dataUrl = await generateTicketImage({ fullName: form.fullName || 'Guest', packageLabel: packages.find(p=>p.id===form.package)?.label||'Participant', summitName: 'NPS 2026', orderId, photoDataUrl: form.photoDataUrl || null })
     setTicketUrl(dataUrl)
   }
 
@@ -149,9 +149,9 @@ export function RegisterModal() {
               {step > 1 && <button onClick={prev} className="px-4 py-2 mr-2 rounded-md border">Back</button>}
             </div>
             <div className="flex items-center gap-2">
-              {step < totalSteps && <button disabled={busy} onClick={() => { if (step===1 && !form.package) { alert('Select a package'); return } setStep(s=>s+1) }} className="px-4 py-2 rounded-md bg-emerald-600 text-white">Continue</button>}
-              {step === totalSteps && !ticketUrl && <button disabled={busy} onClick={handleFinish} className="px-4 py-2 rounded-md bg-emerald-600 text-white">{busy ? 'Processing...' : (form.paymentOption==='online' ? 'Pay & Generate Ticket' : 'Generate Ticket')}</button>}
-            </div>
+                  {step < totalSteps && <button disabled={busy} onClick={() => { if (step===1 && !form.package) { alert('Select a package'); return } setStep(s=>s+1) }} className={"px-4 py-2 rounded-md bg-emerald-600 text-white cursor-pointer hover:bg-emerald-700 active:scale-95 transition transform " + (busy ? 'opacity-60 cursor-not-allowed' : '')}>Continue</button>}
+                  {step === totalSteps && !ticketUrl && <button disabled={busy} onClick={async()=>{ try{ setBusy(true); await handleFinish(); } finally{ setBusy(false) } }} className={"px-4 py-2 rounded-md bg-emerald-600 text-white cursor-pointer hover:bg-emerald-700 active:scale-95 transition transform " + (busy ? 'opacity-60 cursor-not-allowed' : '')}>{busy ? 'Processing...' : (form.paymentOption==='online' ? 'Pay & Generate Ticket' : 'Generate Ticket')}</button>}
+                </div>
           </div>
         </DialogFooter>
       </DialogContent>

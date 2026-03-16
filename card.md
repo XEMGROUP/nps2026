@@ -318,15 +318,3 @@ export function ThemeCalloutCard() {
   );
 }
 ```
-in the register page , i want you to make the nps 2026 in the banner section thats in a pill like background to remove it i want it to now be a large logo image the same image this image npslogo.webp, in the logos uptimized folder, please use the correct path. the text directly below that part, i want you to edit the text "Secure your place at Nigeria's premier pre-retirement summit" to remove the pre before the retiremment and make the retirement text be sentense case, i also want that that retirent summit part, the part after the premier should be dynamic and shukd be changing to these
-
-Retirement resources hub
-retirement Planning Platform 
-post carreer productionhub itll be transitioning infinitely in rotation form one to the other. 
-
-so thats fr the banner section. now in directky under the bahher there shoud be an dummy indicator for people who have registered for the summit, lik a counter saying , one poerson just registered andoter too just registered etc, then in the form below, i want you to modify the form to have the form to be dynamic and have mutiple stages with a progressbar indicator at the top f the forms modal thatll show the users progression through it, so in the section saying do you have any retirement policies, can you remove that and make that an option package type with cards saying 
-
-sponsoidred participants (N249,900)
-Military & paramilitary participants (239,900)
-disabled participants 229, 900
-retired participants 229,900, then after the user selects this, they can select an option to pay now online or later on site, then they can fill the aditional inforation or click continue, (currently the complete registration button), when they do that theyll get a promtp to take a picture or slect an image fr themselves and after they do that when they press continue, if they selected payment online theyll be redirected to the payment gatweay and only when they pay will they be able to get the downloadable ticket while the ones who selcted the ticket will be generated with a barcode that theycan download as an image into their devices, the ticket will carry the name and the summit name etc, a

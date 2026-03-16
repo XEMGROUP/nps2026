@@ -5,6 +5,7 @@ export async function generateTicketImage(data: {
   orderId?: string
   email?: string
   specialRequest?: string
+  photoDataUrl?: string | null
 }) {
   const width = 700
   const height = 1200
@@ -13,82 +14,174 @@ export async function generateTicketImage(data: {
   canvas.height = height
   const ctx = canvas.getContext('2d')!
 
-  // Background gradient (teal)
-  const g = ctx.createLinearGradient(0, 0, 0, height)
-  g.addColorStop(0, '#043434')
-  g.addColorStop(1, '#012a2a')
-  ctx.fillStyle = g
+  // Dark page background
+  ctx.fillStyle = '#0f172a'
   ctx.fillRect(0, 0, width, height)
 
-  // Rounded ticket panel effect
-  ctx.fillStyle = 'rgba(255,255,255,0.03)'
-  const pad = 28
-  ctx.fillRect(pad, pad, width - pad * 2, height - pad * 2)
+  // Ticket card container - rounded corners effect
+  const cardX = 30
+  const cardY = 40
+  const cardWidth = width - 60
+  const cardHeight = height - 80
+  
+  // Draw rounded rect for ticket card
+  ctx.fillStyle = '#111827'
+  roundRect(ctx, cardX, cardY, cardWidth, cardHeight, 24)
+  ctx.fill()
 
-  // Square image placeholder (top center)
-  const imgSize = 220
-  const imgX = (width - imgSize) / 2
-  const imgY = 60
-  ctx.fillStyle = 'rgba(255,255,255,0.04)'
-  ctx.fillRect(imgX, imgY, imgSize, imgSize)
-  ctx.strokeStyle = 'rgba(255,255,255,0.06)'
+  // TOP SECTION - solid (no gradient) as per design
+  const topSectionHeight = 280
+  const topY = cardY + 20
+  ctx.fillStyle = '#111827'
+  roundRect(ctx, cardX + 15, topY, cardWidth - 30, topSectionHeight, 12)
+  ctx.fill()
+
+  // Top section content (white text on gradient)
+  ctx.fillStyle = '#ffffff'
+  ctx.textAlign = 'center'
+  ctx.font = 'bold 14px sans-serif'
+  ctx.fillText(`TICKET TYPE: ${(data.packageLabel || 'PARTICIPANT').toUpperCase()}`, width / 2, topY + 35)
+
+  // Attendee name (large)
+  ctx.font = 'bold 36px sans-serif'
+  ctx.fillText(data.fullName, width / 2, topY + 110)
+
+  // Date and order info
+  ctx.font = '15px sans-serif'
+  // Event date should be fixed to July 15 - 16, 2026
+  const eventDateText = 'July 15 - 16, 2026'
+  ctx.fillText(eventDateText, width / 2, topY + 145)
+  ctx.font = '12px sans-serif'
+  ctx.fillStyle = 'rgba(255,255,255,0.85)'
+  ctx.fillText(`Ordered on: ${new Date().toLocaleString()}`, width / 2, topY + 170)
+
+  // Badge / button
+  ctx.fillStyle = '#10b981'
+  roundRect(ctx, width / 2 - 70, topY + 200, 140, 40, 8)
+  ctx.fill()
+
+  ctx.fillStyle = '#ffffff'
+  ctx.font = 'bold 12px sans-serif'
+  ctx.fillText('SUMMIT PASS', width / 2, topY + 228)
+
+  // DIVIDER LINE (dashed effect)
+  ctx.strokeStyle = 'rgba(255,255,255,0.2)'
+  ctx.setLineDash([8, 8])
   ctx.lineWidth = 2
-  ctx.strokeRect(imgX + 4, imgY + 4, imgSize - 8, imgSize - 8)
+  ctx.beginPath()
+  ctx.moveTo(cardX + 20, topY + topSectionHeight + 20)
+  ctx.lineTo(width - cardX - 20, topY + topSectionHeight + 20)
+  ctx.stroke()
+  ctx.setLineDash([])
 
-  // Summit title
-  ctx.fillStyle = '#bfe8e5'
-  ctx.font = 'bold 28px sans-serif'
-  ctx.textAlign = 'center'
-  ctx.fillText(data.summitName || 'NPS 2026', width / 2, imgY + imgSize + 40)
+  // BOTTOM SECTION - QR Code area and logos
+  const bottomY = topY + topSectionHeight + 50
+  const bottomSectionHeight = cardHeight - topSectionHeight - 70
 
-  // Details block (centered)
-  ctx.textAlign = 'left'
-  ctx.fillStyle = '#e7f7f6'
-  ctx.font = '16px sans-serif'
-  const left = 60
-  let y = imgY + imgSize + 80
+  // QR Code area - draw white rounded box and embed real QR image for the registration link
+  const qrSize = 180
+  const qrX = (width - qrSize) / 2
+  const qrY = bottomY + 10
+  ctx.fillStyle = '#ffffff'
+  roundRect(ctx, qrX, qrY, qrSize, qrSize, 12)
+  ctx.fill()
 
-  ctx.fillText('Date: March 20, 2025 — 7:00 PM', left, y)
-  y += 28
-  ctx.fillText('Location: Lagos, Nigeria', left, y)
-  y += 28
-  ctx.fillText('Ticket Type: ' + (data.packageLabel || 'REGULAR ACCESS'), left, y)
-  y += 28
-  ctx.fillText('Ordered on: ' + new Date().toLocaleString(), left, y)
-  y += 28
-  ctx.fillText('Ordered by: ' + (data.email || 'unknown'), left, y)
-  y += 28
-  if (data.specialRequest) {
-    ctx.fillText('Special Request: ' + data.specialRequest, left, y)
-    y += 28
+  // Draw actual QR image using public QR API pointing to the registration page
+  try {
+    const origin = (typeof globalThis !== 'undefined' && (globalThis as any).location && (globalThis as any).location.origin) || ''
+    const registerUrl = origin + '/register'
+    const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(registerUrl)}`
+    const qrImg = await loadImage(qrSrc)
+    // inset the qrImg slightly
+    const inset = 12
+    ctx.drawImage(qrImg, qrX + inset, qrY + inset, qrSize - inset * 2, qrSize - inset * 2)
+  } catch (e) {
+    // fallback to simple pattern
+    ctx.fillStyle = '#000'
+    ctx.fillRect(qrX + 20, qrY + 20, qrSize - 40, qrSize - 40)
   }
 
-  // Barcode panel
-  const panelY = y + 18
-  const panelH = 220
-  ctx.fillStyle = '#3b6b86'
-  ctx.fillRect(left, panelY, width - left * 2, panelH)
+  // Logo section - draw real logos if available
+  const logoY = qrY + qrSize + 30
+  try {
+    const leftLogo = await loadImage('/images/logos/optimized/NPSlogoWhite.webp')
+    const rightLogo = await loadImage('/images/logos/optimized/XEM Consultants Ltd Logo w.webp')
 
-  // Draw barcode-like bars
-  const code = (data.orderId || String(Date.now())) + (data.email || '')
-  const startX = left + 16
-  const startY = panelY + 24
-  const barHeight = 120
-  let x = startX
-  for (let i = 0; i < 80; i++) {
-    const w = 4 + (i % 3 === 0 ? 2 : 0)
-    ctx.fillStyle = (i % 2 === 0) ? '#071018' : '#ffffff'
-    ctx.fillRect(x, startY, w, barHeight)
-    x += w + 2
+    const leftW = 120
+    const leftH = Math.round((leftLogo.height / leftLogo.width) * leftW)
+    const rightW = 140
+    const rightH = Math.round((rightLogo.height / rightLogo.width) * rightW)
+
+    ctx.drawImage(leftLogo, width / 4 - leftW / 2 - 10, logoY, leftW, leftH)
+    ctx.drawImage(rightLogo, (width * 3) / 4 - rightW / 2 + 10, logoY, rightW, rightH)
+  } catch (e) {
+    // fallback to text labels if logos fail to load
+    ctx.fillStyle = '#d1d5db'
+    ctx.font = '11px sans-serif'
+    ctx.textAlign = 'center'
+    ctx.fillText('THE NATIONAL PRE-RETIREMENT SUMMIT', width / 4 - 20, logoY + 10)
+    ctx.fillText('XEM GLOBAL', width * 3 / 4 + 20, logoY + 10)
   }
 
-  // Email below barcode
-  ctx.fillStyle = '#071018'
-  ctx.font = '18px monospace'
+  // Event name at bottom
+  ctx.fillStyle = '#ffffff'
+  ctx.font = 'bold 20px sans-serif'
   ctx.textAlign = 'center'
-  ctx.fillText((data.email || '').replace(/@/, '@'), width / 2, panelY + panelH - 18)
+  ctx.fillText('NPS 2026', width / 2, bottomY + bottomSectionHeight - 35)
+
+  ctx.fillStyle = '#9ca3af'
+  ctx.font = '12px sans-serif'
+  ctx.fillText('Own Your retirement', width / 2, bottomY + bottomSectionHeight - 10)
+
+  // If a photo is provided, draw it as avatar at top center
+  if (data.photoDataUrl) {
+    try {
+      const avatar = await loadImage(data.photoDataUrl)
+      const pw = 140
+      const ph = 140
+      const px = width / 2 - pw / 2
+      const py = topY - 70
+      // circular clip
+      ctx.save()
+      ctx.beginPath()
+      ctx.arc(px + pw / 2, py + ph / 2, pw / 2, 0, Math.PI * 2)
+      ctx.closePath()
+      ctx.clip()
+      ctx.drawImage(avatar, px, py, pw, ph)
+      ctx.restore()
+    } catch (e) {
+      // ignore avatar errors
+    }
+  }
 
   return canvas.toDataURL('image/png')
+}
+
+// Helper to load images in the browser
+function loadImage(src: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    img.crossOrigin = 'anonymous'
+    img.onload = () => resolve(img)
+    img.onerror = (e) => reject(e)
+    // If src is a data URL, assign directly; otherwise ensure proper encoding
+    img.src = src
+  })
+}
+
+// Helper function to draw rounded rectangles
+function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius: number) {
+  ctx.beginPath()
+  ctx.moveTo(x + radius, y)
+  ctx.lineTo(x + width - radius, y)
+  ctx.quadraticCurveTo(x + width, y, x + width, y + radius)
+  ctx.lineTo(x + width, y + height - radius)
+  ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height)
+  ctx.lineTo(x + radius, y + height)
+  ctx.quadraticCurveTo(x, y + height, x, y + height - radius)
+  ctx.lineTo(x, y + radius)
+  ctx.quadraticCurveTo(x, y, x + radius, y)
+  ctx.closePath()
 }
 
 export default generateTicketImage
