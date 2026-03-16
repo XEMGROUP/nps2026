@@ -1,3 +1,14 @@
+/**
+ * generateTicketImage — NPS 2026 canvas ticket renderer
+ *
+ * Design:
+ *  - Card bg: deep green → deep red diagonal gradient
+ *  - Top panel: white bg, dark text, large rounded-2xl avatar
+ *  - Text pushed right down to separator
+ *  - Perforated dashed divider with semicircle notch cutouts
+ *  - Bottom section: near-black bg, faint NPS watermark, QR, logos, tagline
+ *  - Fonts: Montserrat (headings) + JetBrains Mono (labels/details)
+ */
 export async function generateTicketImage(data: {
   fullName: string
   packageLabel: string
@@ -7,181 +18,316 @@ export async function generateTicketImage(data: {
   specialRequest?: string
   photoDataUrl?: string | null
 }) {
-  const width = 700
-  const height = 1200
-  const canvas = globalThis.document.createElement('canvas')
-  canvas.width = width
-  canvas.height = height
+  // ── Canvas ─────────────────────────────────────────────────────────────────
+  const W = 640
+  const H = 1080
+  const canvas = document.createElement('canvas')
+  canvas.width = W
+  canvas.height = H
   const ctx = canvas.getContext('2d')!
 
-  // Dark page background
-  ctx.fillStyle = '#0f172a'
-  ctx.fillRect(0, 0, width, height)
+  // ── Font loading (fonts already injected by next/font in layout.tsx) ──────
+  try {
+    await Promise.all([
+      document.fonts.load('900 16px Montserrat'),
+      document.fonts.load('700 16px Montserrat'),
+      document.fonts.load('400 14px "JetBrains Mono"'),
+      document.fonts.load('700 14px "JetBrains Mono"'),
+    ])
+  } catch { /* non-fatal – fallback to system sans */ }
 
-  // Ticket card container - rounded corners effect
-  const cardX = 30
-  const cardY = 40
-  const cardWidth = width - 60
-  const cardHeight = height - 80
+  const MONT = (w: number, sz: number) => `${w} ${sz}px Montserrat, sans-serif`
+  const MONO = (w: number, sz: number) => `${w} ${sz}px "JetBrains Mono", monospace`
+
+  // ── Helpers ────────────────────────────────────────────────────────────────
+  const rr = (x: number, y: number, w: number, h: number, r: number) => {
+    ctx.beginPath()
+    ctx.moveTo(x + r, y)
+    ctx.lineTo(x + w - r, y)
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r)
+    ctx.lineTo(x + w, y + h - r)
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h)
+    ctx.lineTo(x + r, y + h)
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r)
+    ctx.lineTo(x, y + r)
+    ctx.quadraticCurveTo(x, y, x + r, y)
+    ctx.closePath()
+  }
+
+  const loadImg = (src: string): Promise<HTMLImageElement> =>
+    new Promise((resolve, reject) => {
+      const img = new Image()
+      img.crossOrigin = 'anonymous'
+      img.onload = () => resolve(img)
+      img.onerror = reject
+      img.src = src
+    })
+
+  // ── Page background ────────────────────────────────────────────────────────
+  ctx.fillStyle = '#0a100a'
+  ctx.fillRect(0, 0, W, H)
+
+  // ── Card layout constants ──────────────────────────────────────────────────
+  const PAD   = 18          // outer padding
+  const cx    = PAD
+  const cy    = PAD
+  const cw    = W - PAD * 2
+  const ch    = H - PAD * 2
+  const BRAD  = 28          // card border radius
+
+  // ── Card gradient background (deep green → deep red, diagonal) ────────────
+  const grad = ctx.createLinearGradient(cx, cy, cx + cw, cy + ch)
+  grad.addColorStop(0,   '#0a2a0a')   // very deep green
+  grad.addColorStop(0.45,'#1a3d1a')   // mid deep green
+  grad.addColorStop(0.55,'#3a0a0a')   // mid deep red
+  grad.addColorStop(1,   '#2a0505')   // very deep red
   
-  // Draw rounded rect for ticket card
-  ctx.fillStyle = '#111827'
-  roundRect(ctx, cardX, cardY, cardWidth, cardHeight, 24)
+  ctx.save()
+  rr(cx, cy, cw, ch, BRAD)
+  ctx.fillStyle = grad
   ctx.fill()
+  ctx.restore()
 
-  // TOP SECTION - solid (no gradient) as per design
-  const topSectionHeight = 280
-  const topY = cardY + 20
-  ctx.fillStyle = '#111827'
-  roundRect(ctx, cardX + 15, topY, cardWidth - 30, topSectionHeight, 12)
-  ctx.fill()
+  // ── Clip entire card ──────────────────────────────────────────────────────
+  ctx.save()
+  rr(cx, cy, cw, ch, BRAD)
+  ctx.clip()
 
-  // Top section content (white text on gradient)
+  // ══════════════════════════════════════════════════════════════════════════
+  // TOP SECTION — white rounded panel
+  // ══════════════════════════════════════════════════════════════════════════
+  const TP  = 20     // top panel inner inset from card edge
+  const tpx = cx + TP
+  const tpy = cy + TP
+  const tpw = cw - TP * 2
+  const DIVIDER_Y = cy + 570   // where the perforated line sits
+
+  // White panel top — from card top to the divider
   ctx.fillStyle = '#ffffff'
-  ctx.textAlign = 'center'
-  ctx.font = 'bold 14px sans-serif'
-  ctx.fillText(`TICKET TYPE: ${(data.packageLabel || 'PARTICIPANT').toUpperCase()}`, width / 2, topY + 35)
-
-  // Attendee name (large)
-  ctx.font = 'bold 36px sans-serif'
-  ctx.fillText(data.fullName, width / 2, topY + 110)
-
-  // Date and order info
-  ctx.font = '15px sans-serif'
-  // Event date should be fixed to July 15 - 16, 2026
-  const eventDateText = 'July 15 - 16, 2026'
-  ctx.fillText(eventDateText, width / 2, topY + 145)
-  ctx.font = '12px sans-serif'
-  ctx.fillStyle = 'rgba(255,255,255,0.85)'
-  ctx.fillText(`Ordered on: ${new Date().toLocaleString()}`, width / 2, topY + 170)
-
-  // Badge / button
-  ctx.fillStyle = '#10b981'
-  roundRect(ctx, width / 2 - 70, topY + 200, 140, 40, 8)
-  ctx.fill()
-
-  ctx.fillStyle = '#ffffff'
-  ctx.font = 'bold 12px sans-serif'
-  ctx.fillText('SUMMIT PASS', width / 2, topY + 228)
-
-  // DIVIDER LINE (dashed effect)
-  ctx.strokeStyle = 'rgba(255,255,255,0.2)'
-  ctx.setLineDash([8, 8])
-  ctx.lineWidth = 2
   ctx.beginPath()
-  ctx.moveTo(cardX + 20, topY + topSectionHeight + 20)
-  ctx.lineTo(width - cardX - 20, topY + topSectionHeight + 20)
+  ctx.moveTo(tpx + BRAD - TP, tpy)
+  ctx.lineTo(tpx + tpw - (BRAD - TP), tpy)
+  ctx.quadraticCurveTo(tpx + tpw, tpy, tpx + tpw, tpy + (BRAD - TP))
+  ctx.lineTo(tpx + tpw, DIVIDER_Y)
+  ctx.lineTo(tpx, DIVIDER_Y)
+  ctx.lineTo(tpx, tpy + (BRAD - TP))
+  ctx.quadraticCurveTo(tpx, tpy, tpx + (BRAD - TP), tpy)
+  ctx.closePath()
+  ctx.fill()
+
+  // ── Avatar ────────────────────────────────────────────────────────────────
+  // Large rounded-2xl square avatar centred in the white panel
+  const AV   = 190              // avatar size
+  const avX  = cx + (cw - AV) / 2
+  const avY  = tpy + 24
+  const avR  = 22               // rounded-2xl approximation
+
+  // Avatar border
+  ctx.strokeStyle = '#d1d5db'
+  ctx.lineWidth = 2
+  rr(avX, avY, AV, AV, avR)
+  ctx.stroke()
+
+  if (data.photoDataUrl) {
+    try {
+      const avatar = await loadImg(data.photoDataUrl)
+      ctx.save()
+      rr(avX, avY, AV, AV, avR)
+      ctx.clip()
+      ctx.drawImage(avatar, avX, avY, AV, AV)
+      ctx.restore()
+    } catch { /* keep border visible */ }
+  } else {
+    // Placeholder
+    ctx.fillStyle = '#f3f4f6'
+    rr(avX, avY, AV, AV, avR)
+    ctx.fill()
+    ctx.fillStyle = '#9ca3af'
+    ctx.font = MONO(400, 12)
+    ctx.textAlign = 'center'
+    ctx.fillText('Attendee Avatar', cx + cw / 2, avY + AV / 2 + 5)
+  }
+
+  // ── Top-section text ──────────────────────────────────────────────────────
+  // All text is dark because white panel bg
+  const TXT_CENTER = cx + cw / 2
+  let ty = avY + AV + 22
+
+  // Ticket type label
+  ctx.fillStyle = '#475569'
+  ctx.font = MONO(700, 10.5)
+  ctx.textAlign = 'center'
+  ctx.letterSpacing = '0.25em'
+  ctx.fillText(`TICKET TYPE: ${(data.packageLabel || 'PARTICIPANT').toUpperCase()}`, TXT_CENTER, ty)
+  ctx.letterSpacing = '0'
+
+  ty += 44
+
+  // Attendee name — big, Montserrat Black
+  ctx.fillStyle = '#111827'
+  ctx.font = MONT(900, 38)
+  ctx.fillText(data.fullName || 'Guest', TXT_CENTER, ty)
+
+  ty += 38
+
+  // Event date
+  ctx.fillStyle = '#374151'
+  ctx.font = MONT(600, 16)
+  ctx.fillText('July 15 – 16, 2026', TXT_CENTER, ty)
+
+  ty += 24
+
+  // Ordered on
+  ctx.fillStyle = '#6b7280'
+  ctx.font = MONO(400, 11)
+  ctx.fillText(`Ordered on: ${new Date().toLocaleString()}`, TXT_CENTER, ty)
+
+  ty += 32
+
+  // Summit Pass badge — emerald pill, still on white bg
+  const BADGE_W = 196, BADGE_H = 40
+  const bX = cx + (cw - BADGE_W) / 2
+  const bY = ty
+
+  ctx.fillStyle = '#059669'
+  rr(bX, bY, BADGE_W, BADGE_H, 9)
+  ctx.fill()
+
+  ctx.strokeStyle = '#34d399'
+  ctx.lineWidth = 1
+  rr(bX, bY, BADGE_W, BADGE_H, 9)
+  ctx.stroke()
+
+  ctx.fillStyle = '#ffffff'
+  ctx.font = MONO(700, 11)
+  ctx.letterSpacing = '0.15em'
+  ctx.fillText('SUMMIT PASS', TXT_CENTER, bY + BADGE_H / 2 + 5)
+  ctx.letterSpacing = '0'
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // PERFORATED DIVIDER
+  // ══════════════════════════════════════════════════════════════════════════
+  ctx.strokeStyle = 'rgba(255,255,255,0.3)'
+  ctx.lineWidth = 2
+  ctx.setLineDash([8, 7])
+  ctx.beginPath()
+  ctx.moveTo(cx + 20, DIVIDER_Y)
+  ctx.lineTo(cx + cw - 20, DIVIDER_Y)
   ctx.stroke()
   ctx.setLineDash([])
 
-  // BOTTOM SECTION - QR Code area and logos
-  const bottomY = topY + topSectionHeight + 50
-  const bottomSectionHeight = cardHeight - topSectionHeight - 70
-
-  // QR Code area - draw white rounded box and embed real QR image for the registration link
-  const qrSize = 180
-  const qrX = (width - qrSize) / 2
-  const qrY = bottomY + 10
-  ctx.fillStyle = '#ffffff'
-  roundRect(ctx, qrX, qrY, qrSize, qrSize, 12)
+  // Left notch — fill with the card gradient colour (use deep green)
+  const NR = 20
+  ctx.fillStyle = '#0a2a0a'
+  ctx.beginPath()
+  ctx.arc(cx, DIVIDER_Y, NR, -Math.PI / 2, Math.PI / 2)
   ctx.fill()
 
-  // Draw actual QR image using public QR API pointing to the registration page
-  try {
-    const origin = (typeof globalThis !== 'undefined' && (globalThis as any).location && (globalThis as any).location.origin) || ''
-    const registerUrl = origin + '/register'
-    const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(registerUrl)}`
-    const qrImg = await loadImage(qrSrc)
-    // inset the qrImg slightly
-    const inset = 12
-    ctx.drawImage(qrImg, qrX + inset, qrY + inset, qrSize - inset * 2, qrSize - inset * 2)
-  } catch (e) {
-    // fallback to simple pattern
-    ctx.fillStyle = '#000'
-    ctx.fillRect(qrX + 20, qrY + 20, qrSize - 40, qrSize - 40)
-  }
+  // Right notch
+  ctx.fillStyle = '#2a0505'
+  ctx.beginPath()
+  ctx.arc(cx + cw, DIVIDER_Y, NR, Math.PI / 2, -Math.PI / 2)
+  ctx.fill()
 
-  // Logo section - draw real logos if available
-  const logoY = qrY + qrSize + 30
-  try {
-    const leftLogo = await loadImage('/images/logos/optimized/NPSlogoWhite.webp')
-    const rightLogo = await loadImage('/images/logos/optimized/XEM Consultants Ltd Logo w.webp')
+  // ══════════════════════════════════════════════════════════════════════════
+  // BOTTOM SECTION — near-black on the gradient card bg
+  // ══════════════════════════════════════════════════════════════════════════
+  const BOT_Y  = DIVIDER_Y + 1
+  const BOT_H  = cy + ch - BOT_Y
 
-    const leftW = 120
-    const leftH = Math.round((leftLogo.height / leftLogo.width) * leftW)
-    const rightW = 140
-    const rightH = Math.round((rightLogo.height / rightLogo.width) * rightW)
+  // Dark overlay to darken the gradient below the divider
+  ctx.fillStyle = 'rgba(5,5,5,0.72)'
+  ctx.fillRect(cx, BOT_Y, cw, BOT_H)
 
-    ctx.drawImage(leftLogo, width / 4 - leftW / 2 - 10, logoY, leftW, leftH)
-    ctx.drawImage(rightLogo, (width * 3) / 4 - rightW / 2 + 10, logoY, rightW, rightH)
-  } catch (e) {
-    // fallback to text labels if logos fail to load
-    ctx.fillStyle = '#d1d5db'
-    ctx.font = '11px sans-serif'
-    ctx.textAlign = 'center'
-    ctx.fillText('THE NATIONAL PRE-RETIREMENT SUMMIT', width / 4 - 20, logoY + 10)
-    ctx.fillText('XEM GLOBAL', width * 3 / 4 + 20, logoY + 10)
-  }
-
-  // Event name at bottom
+  // Faint NPS watermark
+  ctx.save()
+  ctx.globalAlpha = 0.04
   ctx.fillStyle = '#ffffff'
-  ctx.font = 'bold 20px sans-serif'
+  ctx.font = MONT(900, 150) + ' italic'
   ctx.textAlign = 'center'
-  ctx.fillText('NPS 2026', width / 2, bottomY + bottomSectionHeight - 35)
+  ctx.fillText('NPS', cx + cw / 2, BOT_Y + 200)
+  ctx.restore()
 
-  ctx.fillStyle = '#9ca3af'
-  ctx.font = '12px sans-serif'
-  ctx.fillText('Own Your retirement', width / 2, bottomY + bottomSectionHeight - 10)
+  // ── QR Code ───────────────────────────────────────────────────────────────
+  const QR  = 168
+  const qrX = cx + (cw - QR) / 2
+  const qrY = BOT_Y + 30
 
-  // If a photo is provided, draw it as avatar at top center
-  if (data.photoDataUrl) {
-    try {
-      const avatar = await loadImage(data.photoDataUrl)
-      const pw = 140
-      const ph = 140
-      const px = width / 2 - pw / 2
-      const py = topY - 70
-      // circular clip
-      ctx.save()
-      ctx.beginPath()
-      ctx.arc(px + pw / 2, py + ph / 2, pw / 2, 0, Math.PI * 2)
-      ctx.closePath()
-      ctx.clip()
-      ctx.drawImage(avatar, px, py, pw, ph)
-      ctx.restore()
-    } catch (e) {
-      // ignore avatar errors
-    }
+  // White box with shadow
+  ctx.shadowColor = 'rgba(0,0,0,0.55)'
+  ctx.shadowBlur   = 22
+  ctx.fillStyle = '#ffffff'
+  rr(qrX - 14, qrY - 14, QR + 28, QR + 28, 14)
+  ctx.fill()
+  ctx.shadowBlur = 0; ctx.shadowColor = 'transparent'
+
+  try {
+    const origin = (typeof globalThis !== 'undefined' && (globalThis as any).location?.origin) || ''
+    const qrImg = await loadImg(
+      `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(origin + '/register')}`
+    )
+    const inset = 10
+    ctx.drawImage(qrImg, qrX - 14 + inset, qrY - 14 + inset, QR + 28 - inset * 2, QR + 28 - inset * 2)
+  } catch { /* leave white box */ }
+
+  // ── Logos ─────────────────────────────────────────────────────────────────
+  const LOGO_H  = 46
+  const LOGO_Y  = qrY + QR + 50
+
+  // Thin vertical separator between logos
+  ctx.strokeStyle = 'rgba(255,255,255,0.15)'
+  ctx.lineWidth = 1
+  ctx.beginPath()
+  ctx.moveTo(cx + cw / 2, LOGO_Y - 6)
+  ctx.lineTo(cx + cw / 2, LOGO_Y + LOGO_H + 6)
+  ctx.stroke()
+
+  try {
+    const nps = await loadImg('/images/logos/optimized/npslogo.webp')
+    const lw  = Math.round((nps.width / nps.height) * LOGO_H)
+    ctx.save()
+    ctx.globalAlpha = 0.9
+    ctx.drawImage(nps, cx + cw / 4 - lw / 2, LOGO_Y, lw, LOGO_H)
+    ctx.restore()
+  } catch {
+    ctx.fillStyle = '#94a3b8'; ctx.font = MONO(400, 10); ctx.textAlign = 'center'
+    ctx.fillText('NPS LOGO', cx + cw / 4, LOGO_Y + LOGO_H / 2 + 4)
   }
+
+  try {
+    const xem = await loadImg('/images/logos/optimized/XEM Consultants Ltd Logo w.webp')
+    const rw  = Math.round((xem.width / xem.height) * LOGO_H)
+    ctx.save()
+    ctx.globalAlpha = 0.9
+    ctx.drawImage(xem, cx + (cw * 3) / 4 - rw / 2, LOGO_Y, rw, LOGO_H)
+    ctx.restore()
+  } catch {
+    ctx.fillStyle = '#94a3b8'; ctx.font = MONO(400, 10); ctx.textAlign = 'center'
+    ctx.fillText('XEM LOGO', cx + (cw * 3) / 4, LOGO_Y + LOGO_H / 2 + 4)
+  }
+
+  // ── Bottom tagline ─────────────────────────────────────────────────────────
+  const TAG_Y = LOGO_Y + LOGO_H + 46
+
+  ctx.textAlign = 'center'
+  ctx.fillStyle = '#f1f5f9'
+  ctx.font = MONT(900, 26)
+  ctx.fillText('NPS 2026', cx + cw / 2, TAG_Y)
+
+  ctx.fillStyle = 'rgba(148,163,184,0.75)'
+  ctx.font = MONO(400, 10.5)
+  ctx.letterSpacing = '0.38em'
+  ctx.fillText('REFINING THE FUTURE', cx + cw / 2, TAG_Y + 26)
+  ctx.letterSpacing = '0'
+
+  // ── Card border ────────────────────────────────────────────────────────────
+  ctx.restore()  // end card clip
+  ctx.strokeStyle = 'rgba(255,255,255,0.07)'
+  ctx.lineWidth = 1
+  rr(cx, cy, cw, ch, BRAD)
+  ctx.stroke()
 
   return canvas.toDataURL('image/png')
-}
-
-// Helper to load images in the browser
-function loadImage(src: string): Promise<HTMLImageElement> {
-  return new Promise((resolve, reject) => {
-    const img = new Image()
-    img.crossOrigin = 'anonymous'
-    img.onload = () => resolve(img)
-    img.onerror = (e) => reject(e)
-    // If src is a data URL, assign directly; otherwise ensure proper encoding
-    img.src = src
-  })
-}
-
-// Helper function to draw rounded rectangles
-function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius: number) {
-  ctx.beginPath()
-  ctx.moveTo(x + radius, y)
-  ctx.lineTo(x + width - radius, y)
-  ctx.quadraticCurveTo(x + width, y, x + width, y + radius)
-  ctx.lineTo(x + width, y + height - radius)
-  ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height)
-  ctx.lineTo(x + radius, y + height)
-  ctx.quadraticCurveTo(x, y + height, x, y + height - radius)
-  ctx.lineTo(x, y + radius)
-  ctx.quadraticCurveTo(x, y, x + radius, y)
-  ctx.closePath()
 }
 
 export default generateTicketImage

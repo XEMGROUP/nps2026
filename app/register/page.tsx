@@ -65,6 +65,7 @@ export default function RegisterPage() {
   const [downloadConfirmed, setDownloadConfirmed] = useState(false)
   const [showCamera, setShowCamera] = useState(false)
   const webcamRef = useRef<Webcam | null>(null)
+  const ticketCanvasRef = useRef<HTMLCanvasElement | null>(null)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -152,11 +153,31 @@ export default function RegisterPage() {
     }
   }
 
+  // Auto-draw the canvas ticket when the success page appears
   useEffect(() => {
-    return () => {
-      // Cleanup handled by react-webcam
-    }
-  }, [])
+    if (!isSubmitted) return
+    const canvas = ticketCanvasRef.current
+    if (!canvas) return
+
+    generateTicketImage({
+      fullName: formData.fullName || 'Guest',
+      packageLabel: packages.find(p => p.id === selectedPackage)?.name || 'Participant',
+      summitName: 'NPS 2026',
+      photoDataUrl,
+    }).then((dataUrl) => {
+      // Draw the generated image onto the visible canvas so the preview is live
+      const img = new Image()
+      img.onload = () => {
+        canvas.width = img.naturalWidth
+        canvas.height = img.naturalHeight
+        const c = canvas.getContext('2d')!
+        c.drawImage(img, 0, 0)
+      }
+      img.src = dataUrl
+      setTicketUrl(dataUrl)
+    }).catch(console.error)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSubmitted])
 
   // Prevent accidental navigation away before ticket is downloaded
   useEffect(() => {
@@ -215,84 +236,49 @@ export default function RegisterPage() {
 
 
   if (isSubmitted) {
-    const pkg = packages.find(p => p.id === selectedPackage)
-    const ticketTypeLabel = pkg?.name || 'Participant'
-
-    const origin = typeof window !== 'undefined' ? window.location.origin : ''
-    const registerUrl = origin + '/register'
-    const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(registerUrl)}`
 
     return (
       <div className="flex flex-col min-h-screen">
         <Header />
-        <main className="flex-grow pt-12 lg:pt-[88px] bg-white">
-          <div className="min-h-[80vh] flex items-center justify-center p-6">
-            <div className="w-full max-w-4xl flex gap-8 items-start">
-              {/* Left: Ticket Card (show generated image when available) */}
-              <div className="w-1/2">
-                {ticketUrl ? (
-                  <div className="bg-transparent">
-                    <img src={ticketUrl} alt="generated-ticket" className="w-full rounded-3xl shadow-lg" />
-                  </div>
-                ) : (
-                  <div className="bg-[#111827] rounded-3xl overflow-hidden text-white shadow-lg">
-                    <section className="p-8 pb-6 text-center">
-                      <div className="w-20 h-20 mx-auto mb-4 rounded-2xl overflow-hidden border border-slate-700 bg-slate-800 flex items-center justify-center">
-                        {photoDataUrl ? (
-                          <img src={photoDataUrl} alt="Attendee Avatar" className="w-full h-full object-cover" />
-                        ) : (
-                          <div className="w-full h-full bg-slate-700 flex items-center justify-center text-xs">Attendee Avatar</div>
-                        )}
-                      </div>
 
-                      <div className="text-xs font-bold uppercase tracking-[0.3em] text-slate-400 mb-2">TICKET TYPE: {ticketTypeLabel.toUpperCase()}</div>
-                      <h1 className="text-3xl font-extrabold mb-2">{formData.fullName || 'Guest'}</h1>
-                      <div className="flex flex-col gap-1">
-                        <p className="text-slate-300 font-medium">July 15 - 16, 2026</p>
-                        <p className="text-slate-500 text-xs mt-1">Ordered on: {new Date().toLocaleString()}</p>
-                      </div>
+        {/* Generating modal — stays visible while ticket is being prepared */}
+        {(generatingTicket || isSubmitting) && (
+          <div className="fixed inset-0 z-[999] bg-black/60 flex items-center justify-center p-4">
+            <div className="bg-white rounded-2xl p-8 w-full max-w-xs text-center shadow-2xl">
+              <div className="mb-4">
+                <div className="inline-block w-14 h-14 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin" />
+              </div>
+              <div className="font-bold text-slate-900 text-lg">Generating your ticket</div>
+              <div className="text-sm text-slate-500 mt-2">Please wait — your personalised ticket is being prepared.</div>
+            </div>
+          </div>
+        )}
 
-                      <div className="mt-6 inline-block px-8 py-3 rounded-lg bg-emerald-600 border border-emerald-500 text-white text-xs font-bold uppercase tracking-widest">SUMMIT PASS</div>
-                    </section>
+        <main className="flex-grow pt-12 lg:pt-[88px] bg-slate-950">
+          <div className="min-h-[80vh] flex items-center justify-center p-4 sm:p-6">
+            <div className="w-full max-w-5xl flex flex-col lg:flex-row gap-6 lg:gap-10 items-start">
 
-                    <div className="border-t border-slate-800" />
-
-                    <section className="p-8 bg-[#0a0f1a] flex flex-col items-center">
-                      <div className="relative w-full flex items-center justify-center opacity-5 select-none pointer-events-none">
-                        <span className="text-8xl font-black italic">NPS</span>
-                      </div>
-
-                      <div className="relative z-10 p-4 bg-white rounded-xl mb-6 shadow-2xl">
-                        <img src={qrSrc} alt="Registration QR Code" className="w-32 h-32 object-contain" />
-                      </div>
-
-                      <div className="w-full grid grid-cols-2 gap-6 items-center mb-6 px-6">
-                        <div className="flex justify-center">
-                          <img src="/images/logos/optimized/NPSlogoWhite.webp" alt="NPS logo" className="h-10 object-contain" />
-                        </div>
-                        <div className="flex justify-center">
-                          <img src="/images/logos/optimized/XEM Consultants Ltd Logo w.webp" alt="XEM logo" className="h-10 object-contain" />
-                        </div>
-                      </div>
-
-                      <div className="text-center">
-                        <h2 className="font-montserrat text-2xl tracking-tighter text-slate-200">NPS 2026</h2>
-                        <p className="text-xs text-slate-400 mt-2">Own Your retirement</p>
-                      </div>
-                    </section>
-                  </div>
-                )}
+              {/* ── Left: Ticket Canvas ── */}
+              <div className="w-full lg:w-auto lg:flex-shrink-0 flex justify-center">
+                <canvas
+                  ref={ticketCanvasRef}
+                  className="w-full max-w-[340px] sm:max-w-[380px] lg:max-w-none lg:w-[320px] rounded-3xl shadow-2xl"
+                  style={{ imageRendering: 'crisp-edges' }}
+                />
               </div>
 
-              {/* Right: Success message + instructions (no duplicate ticket preview) */}
-              <div className="w-1/2 bg-white rounded-2xl p-8 shadow-md">
+              {/* ── Right: Success info card ── */}
+              <div className="w-full lg:flex-1 bg-white rounded-2xl p-6 sm:p-8 shadow-md">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
+                  <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
                     <CheckCircle2 className="w-6 h-6 text-emerald-600" />
                   </div>
                   <div>
                     <h3 className="text-2xl font-bold text-slate-900">Registration Successful!</h3>
-                    <p className="text-slate-600 mt-2">Thank you for registering for NPS 2026. A confirmation email has been sent to <strong>{formData.email || 'your email'}</strong>.</p>
+                    <p className="text-slate-600 mt-2">
+                      Thank you for registering for NPS 2026. A confirmation email has been sent to{' '}
+                      <strong>{formData.email || 'your email'}</strong>.
+                    </p>
                   </div>
                 </div>
 
@@ -305,64 +291,50 @@ export default function RegisterPage() {
                     <li>If you lose the ticket, contact support with your registration details.</li>
                   </ul>
 
-                  <div className="mt-6 flex gap-3">
-                    <button onClick={async () => {
-                      // Ensure ticket is generated, then trigger download
-                      try {
-                        if (!ticketUrl) {
-                          setGeneratingTicket(true)
-                          await handleGenerateTicket('ON-SITE-' + Date.now())
-                        }
-                        if (ticketUrl || (await Promise.resolve(ticketUrl))) {
-                          // programmatic download
-                        }
-                      } finally {
-                        setGeneratingTicket(false)
-                      }
-                    }} disabled={generatingTicket} className={"px-4 py-2 bg-emerald-600 text-white rounded-lg cursor-pointer hover:bg-emerald-700 active:scale-95 transition transform " + (generatingTicket ? 'opacity-60 cursor-not-allowed' : '')}>
-                      {generatingTicket ? 'Generating…' : 'Generate Ticket'}
+                  <div className="mt-6 flex flex-wrap gap-3">
+                    <button
+                      onClick={() => {
+                        const url = ticketUrl
+                        if (!url) return
+                        const a = document.createElement('a')
+                        a.href = url
+                        a.download = `NPS2026-ticket-${(formData.fullName || 'guest').replace(/\s+/g, '-')}.png`
+                        document.body.appendChild(a)
+                        a.click()
+                        a.remove()
+                        setDownloadConfirmed(true)
+                      }}
+                      disabled={!ticketUrl}
+                      className={`px-4 py-2 rounded-lg transition ${
+                        ticketUrl
+                          ? 'bg-emerald-600 text-white hover:bg-emerald-700 active:scale-95'
+                          : 'bg-emerald-200 text-emerald-800 cursor-not-allowed'
+                      }`}
+                    >
+                      {ticketUrl ? 'Download Ticket' : 'Preparing…'}
                     </button>
 
-                    <button onClick={async () => {
-                      try {
-                        let url = ticketUrl
-                        if (!url) {
-                          setGeneratingTicket(true)
-                          url = await handleGenerateTicket('ON-SITE-' + Date.now())
+                    <button
+                      onClick={() => {
+                        if (!downloadConfirmed) {
+                          alert('Please download your ticket before returning to the homepage.')
+                          return
                         }
-                        if (url) {
-                          const a = document.createElement('a')
-                          a.href = url
-                          a.download = `NPS2026-ticket-${(formData.fullName||'guest').replace(/\s+/g,'-')}.png`
-                          document.body.appendChild(a)
-                          a.click()
-                          a.remove()
-                          setDownloadConfirmed(true)
-                        }
-                      } finally {
-                        setGeneratingTicket(false)
-                      }
-                    }} className="px-4 py-2 rounded-lg border bg-white">Download Ticket</button>
-
-                    <button onClick={() => { if (!downloadConfirmed) { alert('Please download your ticket before returning to the homepage.') ; return } window.location.href='/' }} className={"px-4 py-2 rounded-lg border ml-auto " + (downloadConfirmed ? 'cursor-pointer' : 'opacity-60 cursor-not-allowed')} disabled={!downloadConfirmed}>Return to Homepage</button>
+                        window.location.href = '/'
+                      }}
+                      disabled={!downloadConfirmed}
+                      className={`px-4 py-2 rounded-lg border ml-auto ${
+                        downloadConfirmed ? 'cursor-pointer' : 'opacity-60 cursor-not-allowed'
+                      }`}
+                    >
+                      Return to Homepage
+                    </button>
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
-
-          {/* Generating modal */}
-          {generatingTicket && (
-            <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
-              <div className="bg-white rounded-lg p-6 w-[320px] text-center">
-                <div className="mb-4">
-                  <div className="inline-block w-12 h-12 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin" />
-                </div>
-                <div className="font-semibold text-slate-900">Generating your ticket</div>
-                <div className="text-sm text-slate-600 mt-2">Please wait — your ticket is being generated.</div>
-              </div>
-            </div>
-          )}
         </main>
         <Footer />
       </div>
@@ -372,6 +344,20 @@ export default function RegisterPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
+
+      {/* Full-page generating modal — always on top during ticket generation */}
+      {(generatingTicket || isSubmitting) && (
+        <div className="fixed inset-0 z-[999] bg-black/60 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl p-8 w-full max-w-xs text-center shadow-2xl">
+            <div className="mb-4">
+              <div className="inline-block w-14 h-14 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin" />
+            </div>
+            <div className="font-bold text-slate-900 text-lg">Generating your ticket</div>
+            <div className="text-sm text-slate-500 mt-2">Please wait — your personalised ticket is being prepared.</div>
+          </div>
+        </div>
+      )}
+
       <main className="flex-grow pt-12 lg:pt-[88px]">
         <PageBanner
           title="Register for NPS 2026"
@@ -689,7 +675,7 @@ export default function RegisterPage() {
                         return
                       }
                     }
-                  }} className={"ml-auto px-4 py-3 rounded-md bg-emerald-600 text-white cursor-pointer hover:bg-emerald-700 active:scale-95 transition transform " + (generatingTicket || isSubmitting ? 'opacity-60 cursor-not-allowed' : '')}>{generatingTicket ? 'Generating…' : (step===3 ? 'Register' : 'Continue')}</button>}
+                  }} className={"ml-auto px-4 py-3 rounded-md bg-emerald-600 text-white cursor-pointer hover:bg-emerald-700 active:scale-95 transition transform " + (generatingTicket || isSubmitting ? 'opacity-60 cursor-not-allowed' : '')}>{step===3 ? 'Register' : 'Continue'}</button>}
                   {step === totalSteps && <button type="button" onClick={handleFinalise} disabled={isSubmitting || generatingTicket} className={"ml-auto px-4 py-3 rounded-md bg-emerald-600 text-white cursor-pointer hover:bg-emerald-700 active:scale-95 transition transform " + (isSubmitting || generatingTicket ? 'opacity-60 cursor-not-allowed' : '')}>{isSubmitting ? 'Processing...' : (paymentOption==='online' ? 'Pay & Generate Ticket' : 'Generate Ticket')}</button>}
                 </div>
               </motion.form>
