@@ -84,7 +84,12 @@ export function GuestSpeakers() {
   }
 
   return (
-    <section className="py-24 bg-gray-100 text-gray-900 relative overflow-hidden">
+    <section 
+      className="py-24 text-gray-900 relative overflow-hidden"
+      style={{
+        background: `linear-gradient(135deg, rgba(1,102,51,0.1) 0%, rgba(204,51,0,0.1) 100%)`,
+      }}
+    >
       {/* Background Decoration */}
       <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-emerald-600 rounded-full mix-blend-multiply filter blur-[120px] opacity-20 pointer-events-none" />
 
@@ -99,7 +104,7 @@ export function GuestSpeakers() {
             style={{ willChange: 'opacity, transform' }}
           >
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4 text-emerald-800">
-              Guest Speakers.
+              2026 Guest Speakers.
             </h2>
             <p className="text-base md:text-lg text-gray-600 max-w-md">
               Hear from the policymakers, industry leaders, and experts shaping Africa&apos;s retirement landscape.

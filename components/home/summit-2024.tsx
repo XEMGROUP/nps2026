@@ -5,21 +5,31 @@ import { motion } from "framer-motion"
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react"
 import { useState, useEffect } from "react"
 
-import { optimized2024 } from '@/lib/optimizedImages'
-
-const summitImages = optimized2024
-
 export function Summit2024() {
+  const [summitImages, setSummitImages] = useState<string[]>([])
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
-  
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const response = await fetch('/api/images/2024')
+        const images = await response.json()
+        setSummitImages(images)
+      } catch (error) {
+        console.error('Failed to fetch images:', error)
+      }
+    }
+    fetchImages()
+  }, [])
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % summitImages.length)
-    }, 5000)
-    return () => clearInterval(interval)
-  }, [])
+    if (summitImages.length > 0) {
+      const interval = setInterval(() => {
+        setCurrentImageIndex((prev) => (prev + 1) % summitImages.length)
+      }, 5000)
+      return () => clearInterval(interval)
+    }
+  }, [summitImages])
 
   // Layout relies on responsive flexbox; no manual height/scale sync needed
 

@@ -1,15 +1,12 @@
+"use client"
+
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { PageBanner } from "@/components/ui/page-banner"
 import Link from "next/link"
 import { ArrowLeft, CheckCircle2 } from "lucide-react"
-import { optimized2025 } from '@/lib/optimizedImages'
+import { useState, useEffect } from "react"
 import { HistoryGallery } from '@/components/history/gallery'
-
-export const metadata = {
-  title: "2025 Summit - National Pre-Retirement Summit",
-  description: "The 2025 edition expanded from a national initiative to a regional Pan-African platform at the ECOWAS Commission Secretariat.",
-}
 
 const highlights = [
   "Continental participation by ambassadors and regional representatives from West and Central Africa",
@@ -27,7 +24,20 @@ const outcomes = [
 ]
 
 export default function History2025Page() {
-  // Gallery is rendered by the client `HistoryGallery` component; no hooks needed here.
+  const [images, setImages] = useState<string[]>([])
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const response = await fetch('/api/images/2025')
+        const imgs = await response.json()
+        setImages(imgs)
+      } catch (error) {
+        console.error('Failed to fetch images:', error)
+      }
+    }
+    fetchImages()
+  }, [])
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -38,7 +48,7 @@ export default function History2025Page() {
           subtitle="The Retirement Revolution: Embracing the New Era of Possibilities"
         />
 
-        <HistoryGallery images={optimized2025} />
+        <HistoryGallery images={images} />
 
         <div className="container mx-auto px-4 py-16 max-w-5xl">
           {/* Back Link */}

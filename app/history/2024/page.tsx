@@ -1,15 +1,12 @@
+"use client"
+
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { PageBanner } from "@/components/ui/page-banner"
 import Link from "next/link"
 import { ArrowLeft, CheckCircle2 } from "lucide-react"
-import { optimized2024 } from '@/lib/optimizedImages'
+import { useState, useEffect } from "react"
 import { HistoryGallery } from '@/components/history/gallery'
-
-export const metadata = {
-  title: "2024 Summit - National Pre-Retirement Summit",
-  description: "The inaugural National Pre-Retirement Summit marked the first coordinated national effort to address retirement planning in Nigeria.",
-}
 
 const highlights = [
   "First coordinated national platform dedicated solely to pre-retirement planning",
@@ -29,7 +26,20 @@ const participants = [
 ]
 
 export default function History2024Page() {
-  
+  const [images, setImages] = useState<string[]>([])
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const response = await fetch('/api/images/2024')
+        const imgs = await response.json()
+        setImages(imgs)
+      } catch (error) {
+        console.error('Failed to fetch images:', error)
+      }
+    }
+    fetchImages()
+  }, [])
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -40,7 +50,7 @@ export default function History2024Page() {
           subtitle="Establishing a National Platform for Retirement Readiness"
         />
 
-        <HistoryGallery images={optimized2024} />
+        <HistoryGallery images={images} />
 
         <div className="container mx-auto px-4 py-16 max-w-5xl">
           {/* Back Link */}
