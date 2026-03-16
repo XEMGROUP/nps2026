@@ -9,10 +9,12 @@ const messages = [
 ]
 
 export function RegistrationIndicator() {
-  const [count, setCount] = useState(() => Math.floor(Math.random() * 3) + 1)
+  const [count, setCount] = useState(1)
   const [msgIndex, setMsgIndex] = useState(0)
 
   useEffect(() => {
+    // Set initial count randomly on client only
+    setCount(Math.floor(Math.random() * 3) + 1)
     const t = setInterval(() => {
       setCount((c) => c + (Math.random() > 0.6 ? 2 : 1))
       setMsgIndex((i) => (i + 1) % messages.length)
