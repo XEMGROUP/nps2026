@@ -38,10 +38,10 @@ const speakers = [
 const SpeakerCard = memo(({ speaker, currentIndex, index }: { speaker: any; currentIndex: number; index: number }) => (
   <div
     key={`${currentIndex}-${index}`}
-    className="flex flex-col bg-white/5 border border-white/10 rounded-2xl overflow-hidden backdrop-blur-sm hover:bg-white/10 transition-colors h-full"
+    className="flex flex-col bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-lg transition-all h-full"
     style={{ willChange: 'opacity' }}
   >
-    <div className="w-full h-48 sm:h-64 bg-gray-700 flex-shrink-0 overflow-hidden">
+    <div className="w-full h-48 sm:h-64 bg-gray-100 flex-shrink-0 overflow-hidden">
       <Image
         src={speaker.image}
         alt={speaker.name}
@@ -53,11 +53,11 @@ const SpeakerCard = memo(({ speaker, currentIndex, index }: { speaker: any; curr
       />
     </div>
     <div className="flex-1 flex flex-col p-4">
-      <h3 className="text-lg font-bold text-white mb-1">{speaker.name}</h3>
-      <p className="text-orange-400 font-mono text-xs font-bold uppercase tracking-wider mb-3">
+      <h3 className="text-lg font-bold text-yellow-600 mb-1">{speaker.name}</h3>
+      <p className="text-red-600 font-mono text-xs font-bold uppercase tracking-wider mb-3">
         {speaker.title}
       </p>
-      <p className="text-gray-300 text-sm leading-relaxed flex-1">{speaker.bio}</p>
+      <p className="text-gray-900 text-sm leading-relaxed flex-1">{speaker.bio}</p>
     </div>
   </div>
 ))
@@ -84,7 +84,7 @@ export function GuestSpeakers() {
   }
 
   return (
-    <section className="py-24 bg-slate-900 text-white relative overflow-hidden">
+    <section className="py-24 bg-gray-100 text-gray-900 relative overflow-hidden">
       {/* Background Decoration */}
       <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-emerald-600 rounded-full mix-blend-multiply filter blur-[120px] opacity-20 pointer-events-none" />
 
@@ -98,10 +98,10 @@ export function GuestSpeakers() {
             transition={{ duration: 0.4 }}
             style={{ willChange: 'opacity, transform' }}
           >
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4 text-emerald-800">
               Guest Speakers.
             </h2>
-            <p className="text-base md:text-lg text-gray-300 max-w-md">
+            <p className="text-base md:text-lg text-gray-600 max-w-md">
               Hear from the policymakers, industry leaders, and experts shaping Africa&apos;s retirement landscape.
             </p>
           </motion.div>
@@ -115,7 +115,7 @@ export function GuestSpeakers() {
           >
             <Link
               href="/speakers"
-              className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-xl font-bold backdrop-blur-md transition-colors border border-white/20 group text-sm sm:text-base"
+              className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-xl font-bold transition-colors group text-sm sm:text-base"
             >
               Meet All the Speakers
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -145,20 +145,20 @@ export function GuestSpeakers() {
             <div className="absolute top-1/3 -left-6 -translate-y-1/2 z-20">
               <button
                 onClick={goToPrevious}
-                className="w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center backdrop-blur-md transition-colors border border-white/20"
+                className="w-12 h-12 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center transition-colors border border-gray-300"
                 aria-label="Previous speakers"
               >
-                <ChevronLeft className="w-6 h-6 text-white" />
+                <ChevronLeft className="w-6 h-6 text-gray-700" />
               </button>
             </div>
 
             <div className="absolute top-1/3 -right-6 -translate-y-1/2 z-20">
               <button
                 onClick={goToNext}
-                className="w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center backdrop-blur-md transition-colors border border-white/20"
+                className="w-12 h-12 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center transition-colors border border-gray-300"
                 aria-label="Next speakers"
               >
-                <ChevronRight className="w-6 h-6 text-white" />
+                <ChevronRight className="w-6 h-6 text-gray-700" />
               </button>
             </div>
           </div>
@@ -171,8 +171,8 @@ export function GuestSpeakers() {
                 onClick={() => setCurrentIndex(index)}
                 className={`h-2 rounded-full transition-all duration-300 ${
                   index === currentIndex
-                    ? "w-8 bg-emerald-400"
-                    : "w-2 bg-white/30 hover:bg-white/50"
+                    ? "w-8 bg-emerald-600"
+                    : "w-2 bg-gray-300 hover:bg-gray-400"
                 }`}
                 aria-label={`Go to speaker ${index + 1}`}
               />

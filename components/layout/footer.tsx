@@ -47,12 +47,12 @@ export function Footer() {
   }
 
   return (
-    <footer 
-      className={`text-white ${isHomePage ? 'pt-0' : 'pt-20'} pb-10 relative overflow-hidden ${isHomePage ? '' : 'bg-slate-900 border-t-[6px] border-emerald-600'}`}
-      style={isHomePage ? {
+    <footer
+      className={`text-white pt-20 pb-10 relative overflow-hidden`}
+      style={{
         background: `linear-gradient(180deg, #016633 0%, #CC3300 100%)`,
-      } : {}}
-      onMouseMove={isHomePage ? handleMouseMove : undefined}
+      }}
+      onMouseMove={handleMouseMove}
     >
       {/* CTA Section - Only on Home Page */}
       {isHomePage && (
