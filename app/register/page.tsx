@@ -158,6 +158,27 @@ export default function RegisterPage() {
     }
   }, [])
 
+  // Prevent accidental navigation away before ticket is downloaded
+  useEffect(() => {
+    function onBeforeUnload(e: BeforeUnloadEvent) {
+      if (isSubmitted && !downloadConfirmed) {
+        e.preventDefault()
+        e.returnValue = ''
+        return ''
+      }
+      return undefined
+    }
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('beforeunload', onBeforeUnload)
+    }
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('beforeunload', onBeforeUnload)
+      }
+    }
+  }, [isSubmitted, downloadConfirmed])
+
   const startCamera = () => {
     setShowCamera(true)
   }
@@ -303,16 +324,15 @@ export default function RegisterPage() {
                     </button>
 
                     <button onClick={async () => {
-                      // download action: if ticketUrl not ready, generate first
                       try {
-                        if (!ticketUrl) {
+                        let url = ticketUrl
+                        if (!url) {
                           setGeneratingTicket(true)
-                          await handleGenerateTicket('ON-SITE-' + Date.now())
+                          url = await handleGenerateTicket('ON-SITE-' + Date.now())
                         }
-                        // after ensure ticketUrl, perform download
-                        if (ticketUrl) {
+                        if (url) {
                           const a = document.createElement('a')
-                          a.href = ticketUrl
+                          a.href = url
                           a.download = `NPS2026-ticket-${(formData.fullName||'guest').replace(/\s+/g,'-')}.png`
                           document.body.appendChild(a)
                           a.click()
