@@ -49,7 +49,7 @@ export default function SpeakersPage() {
         <div className="container mx-auto px-4 py-16 max-w-6xl">
           {/* Featured Speakers */}
           <section className="mb-16">
-            <h2 className="text-2xl font-black text-secondary mb-8 tracking-tight">Featured Speakers</h2>
+            <h2 className="text-2xl font-black text-emerald-800 mb-8 tracking-tight">Featured Speakers</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {speakers
                 .filter((s) => s.featured)
@@ -84,7 +84,7 @@ export default function SpeakersPage() {
 
           {/* Become a Speaker CTA (single) */}
           <section className="bg-primary/5 rounded-3xl p-12 text-center border border-primary/10">
-            <h2 className="text-3xl font-black text-secondary mb-4">Interested in Speaking?</h2>
+            <h2 className="text-3xl font-black text-emerald-800 mb-4">Interested in Speaking?</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto mb-8">
               We welcome thought leaders, industry experts, and policymakers who can contribute to the conversation on retirement readiness in Africa.
             </p>

@@ -93,7 +93,7 @@ export default function PartnersPage() {
               viewport={{ once: true }}
               className="text-center mb-12"
             >
-              <h2 className="text-3xl font-black text-secondary mb-4 tracking-tight">Our Strategic Partners</h2>
+              <h2 className="text-3xl font-black text-emerald-800 mb-4 tracking-tight">Our Strategic Partners</h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
                 We are proud to work with leading government institutions, financial organizations, and private sector partners committed to improving retirement outcomes in Africa.
               </p>
@@ -112,7 +112,7 @@ export default function PartnersPage() {
                   <div className="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-primary group-hover:text-white transition-colors">
                     <partner.icon className="w-8 h-8 text-primary group-hover:text-white transition-colors" />
                   </div>
-                  <h3 className="font-bold text-secondary text-lg">{partner.name}</h3>
+                  <h3 className="font-bold text-emerald-800 text-lg">{partner.name}</h3>
                   <p className="text-xs text-muted-foreground mt-1">{partner.fullName}</p>
                 </motion.div>
               ))}
@@ -151,7 +151,7 @@ export default function PartnersPage() {
               viewport={{ once: true }}
               className="text-center mb-12"
             >
-              <h2 className="text-3xl font-black text-secondary mb-4 tracking-tight">Partnership Opportunities</h2>
+              <h2 className="text-3xl font-black text-emerald-800 mb-4 tracking-tight">Partnership Opportunities</h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
                 Choose the sponsorship tier that best aligns with your organization&apos;s goals and visibility requirements.
               </p>
@@ -188,7 +188,7 @@ export default function PartnersPage() {
 
           {/* Contact CTA */}
           <section className="bg-muted rounded-3xl p-12 text-center">
-            <h2 className="text-3xl font-black text-secondary mb-4">Become a Partner</h2>
+            <h2 className="text-3xl font-black text-emerald-800 mb-4">Become a Partner</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto mb-8">
               The National Pre-Retirement Summit welcomes strategic partners, sponsors, and solution providers who share a commitment to improving retirement outcomes in Nigeria and across Africa.
             </p>
@@ -202,7 +202,7 @@ export default function PartnersPage() {
               </a>
               <a
                 href="tel:+2349095511111"
-                className="inline-flex items-center justify-center gap-2 bg-white hover:bg-muted text-secondary px-8 py-4 rounded-xl font-bold text-lg border border-border transition-all hover:-translate-y-1"
+                className="inline-flex items-center justify-center gap-2 bg-white hover:bg-muted text-emerald-800 px-8 py-4 rounded-xl font-bold text-lg border border-border transition-all hover:-translate-y-1"
               >
                 Call Us: +234 909 551 1111
               </a>

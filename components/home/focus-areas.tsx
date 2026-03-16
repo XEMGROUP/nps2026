@@ -87,9 +87,14 @@ export function FocusAreas() {
               <p className="text-[#787878] text-lg font-medium leading-relaxed">The 2026 program focuses on measurable outcomes across policy reform, investment pathways, and scalable retirement solutions — with dedicated working groups for finance, health, and digital inclusion.</p>
             </div>
             <div className="lg:w-64 shrink-0">
-              <div className="bg-[#02004C] rounded-2xl p-8 text-white text-center">
-                <p className="font-mono text-xs uppercase tracking-widest text-white/50 mb-3">Save the Date</p>
-                <p className="font-black text-4xl text-[#016633] tracking-tighter mb-1">July</p>
+              <div
+                className="rounded-2xl p-8 text-white text-center"
+                style={{
+                  background: `linear-gradient(135deg, rgba(1,102,51,0.9) 0%, rgba(204,51,0,0.9) 100%)`,
+                }}
+              >
+                <p className="font-mono text-xs uppercase tracking-widest text-white/70 mb-3">Save the Date</p>
+                <p className="font-black text-4xl text-amber-300 tracking-tighter mb-1">July</p>
                 <p className="font-black text-6xl text-white tracking-tighter leading-none">15–16</p>
                 <p className="font-mono text-sm text-white/60 mt-3 uppercase tracking-wider">2026 · Abuja</p>
               </div>
@@ -104,25 +109,45 @@ export function FocusAreas() {
           variants={staggerContainer}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
-          {focusAreas.map((area, index) => (
-            <motion.div
-              key={index}
-              variants={fadeInUp}
-              className="bg-white p-4 sm:p-6 md:p-8 rounded-2xl shadow-lg shadow-black/5 border border-gray-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group"
-              style={{ willChange: 'opacity, transform' }}
-            >
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-emerald-100 rounded-xl flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-700 transition-all flex-shrink-0">
-                  <area.icon className="w-6 h-6 sm:w-7 sm:h-7 text-emerald-700 group-hover:text-white transition-colors" />
-                </div>
+          {focusAreas.map((area, index) => {
+            const gradients = [
+              'bg-gradient-to-br from-emerald-50 to-emerald-100',
+              'bg-gradient-to-br from-red-50 to-red-100',
+              'bg-gradient-to-br from-amber-50 to-amber-100',
+              'bg-gradient-to-br from-blue-50 to-blue-100',
+              'bg-gradient-to-br from-purple-50 to-purple-100',
+              'bg-gradient-to-br from-green-50 to-green-100',
+            ]
+            const gradientBg = gradients[index % gradients.length]
+            const iconColors = [
+              { bg: 'bg-emerald-100', icon: 'text-emerald-700' },
+              { bg: 'bg-red-100', icon: 'text-red-700' },
+              { bg: 'bg-amber-100', icon: 'text-amber-700' },
+              { bg: 'bg-blue-100', icon: 'text-blue-700' },
+              { bg: 'bg-purple-100', icon: 'text-purple-700' },
+              { bg: 'bg-green-100', icon: 'text-green-700' },
+            ]
+            const iconScheme = iconColors[index % iconColors.length]
+            return (
+              <motion.div
+                key={index}
+                variants={fadeInUp}
+                className={`${gradientBg} p-4 sm:p-6 md:p-8 rounded-2xl shadow-lg shadow-black/5 border border-gray-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group`}
+                style={{ willChange: 'opacity, transform' }}
+              >
+                <div className="flex items-start gap-4">
+                  <div className={`w-12 h-12 sm:w-14 sm:h-14 ${iconScheme.bg} rounded-xl flex items-center justify-center group-hover:scale-110 group-hover:${iconScheme.bg.replace('100', '200')} transition-all flex-shrink-0`}>
+                    <area.icon className={`w-6 h-6 sm:w-7 sm:h-7 ${iconScheme.icon} group-hover:${iconScheme.icon.replace('700', '800')} transition-colors`} />
+                  </div>
 
-                <div>
-                  <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-1">{area.title}</h3>
-                  <p className="text-sm sm:text-base text-slate-600">{area.description}</p>
+                  <div>
+                    <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-1">{area.title}</h3>
+                    <p className="text-sm sm:text-base text-slate-600">{area.description}</p>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            )
+          })}
         </motion.div>
 
         <motion.div

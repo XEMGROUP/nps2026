@@ -56,7 +56,7 @@ export default function History2025Page() {
               2025 Edition
             </div>
 
-            <h2 className="text-3xl font-black text-secondary mb-6 tracking-tight">Expanding the Retirement Conversation Across Africa</h2>
+            <h2 className="text-3xl font-black text-emerald-800 mb-6 tracking-tight">Expanding the Retirement Conversation Across Africa</h2>
             <p className="text-lg text-muted-foreground leading-relaxed mb-8">
               The 2025 edition of the National Pre-Retirement Summit represented a strategic evolution from a national initiative to a regional platform. Hosted at the ECOWAS Commission Secretariat in Abuja, the Summit deliberately expanded its scope to include participants and institutional representatives from across West and Central Africa.
             </p>
@@ -72,25 +72,25 @@ export default function History2025Page() {
             {/* Stats Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 mb-12">
               <div className="bg-muted rounded-xl p-6 text-center">
-                <span className="block text-4xl font-black text-secondary mb-2">1,500+</span>
+                <span className="block text-4xl font-black text-emerald-800 mb-2">1,500+</span>
                 <span className="text-sm font-mono text-muted-foreground">Attendees</span>
               </div>
               <div className="bg-muted rounded-xl p-6 text-center">
-                <span className="block text-4xl font-black text-secondary mb-2">15+</span>
+                <span className="block text-4xl font-black text-emerald-800 mb-2">15+</span>
                 <span className="text-sm font-mono text-muted-foreground">Countries</span>
               </div>
               <div className="bg-muted rounded-xl p-6 text-center">
-                <span className="block text-4xl font-black text-secondary mb-2">50+</span>
+                <span className="block text-4xl font-black text-emerald-800 mb-2">50+</span>
                 <span className="text-sm font-mono text-muted-foreground">Speakers</span>
               </div>
               <div className="bg-muted rounded-xl p-6 text-center">
-                <span className="block text-4xl font-black text-secondary mb-2">30+</span>
+                <span className="block text-4xl font-black text-emerald-800 mb-2">30+</span>
                 <span className="text-sm font-mono text-muted-foreground">Sessions</span>
               </div>
             </div>
 
             {/* What Was Peculiar */}
-            <h3 className="text-2xl font-black text-secondary mb-6 tracking-tight">What Was Peculiar to 2025</h3>
+            <h3 className="text-2xl font-black text-emerald-800 mb-6 tracking-tight">What Was Peculiar to 2025</h3>
             <ul className="space-y-3 mb-12">
               {highlights.map((highlight, index) => (
                 <li key={index} className="flex items-start gap-3 text-muted-foreground">
@@ -101,7 +101,7 @@ export default function History2025Page() {
             </ul>
 
             {/* Key Outcomes */}
-            <h3 className="text-2xl font-black text-secondary mb-6 tracking-tight">Key Outcomes</h3>
+            <h3 className="text-2xl font-black text-emerald-800 mb-6 tracking-tight">Key Outcomes</h3>
             <ul className="space-y-3 mb-12">
               {outcomes.map((outcome, index) => (
                 <li key={index} className="flex items-start gap-3 text-muted-foreground">
@@ -115,7 +115,7 @@ export default function History2025Page() {
             <div className="border-t border-border pt-8 mt-8 flex flex-col sm:flex-row sm:justify-between gap-3">
               <Link
                 href="/history/2024"
-                className="inline-flex items-center gap-2 bg-muted text-secondary px-4 py-2 sm:px-6 sm:py-3 rounded-xl font-bold hover:bg-muted/80 transition-colors"
+                className="inline-flex items-center gap-2 bg-muted text-emerald-800 px-4 py-2 sm:px-6 sm:py-3 rounded-xl font-bold hover:bg-muted/80 transition-colors"
               >
                 <ArrowLeft className="w-4 h-4" />
                 View 2024 Summit

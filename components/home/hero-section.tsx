@@ -58,7 +58,7 @@ export function HeroSection() {
 			<div className="relative z-30 flex-1 flex flex-col justify-center">
 				{/* Main Content - Flex to push buttons down */}
 				<div className="w-full px-0 md:px-4 py-4 md:py-6">
-					<div className="w-full">
+					<div className="w-full md:ml-8 lg:ml-16">
 
 
 						{/* Main Heading */}
@@ -70,20 +70,24 @@ export function HeroSection() {
 							className="group mb-0 mx-0"
 						>
 							<div className="font-black group leading-none">
-								{/* First Row: 2026 Theme and Own Your */}
+								{/* Mobile: 2026 Theme on its own line above Own Your */}
+								<div className="md:hidden flex justify-center items-center mb-2">
+									<span className="bg-red-700 text-white font-black uppercase px-2 py-0.5 rounded text-lg tracking-tight">2026 theme:</span>
+								</div>
+								{/* Desktop and Mobile: Own Your and 2026 Theme on same line */}
 								<div className="flex justify-center md:justify-start items-center gap-2 mb-2">
-									<span className="bg-red-700 text-white font-black uppercase px-2 py-0.5 rounded text-lg md:text-lg tracking-tight">2026 theme:</span>
-									<span className="text-white text-4xl md:text-5xl lg:text-7xl tracking-tight">Own Your</span>
+									<span className="hidden md:inline bg-red-700 text-white font-black uppercase px-2 py-0.5 rounded text-lg tracking-tight">2026 theme:</span>
+									<span className="text-white text-4xl md:text-5xl lg:text-6xl tracking-tight">Own Your</span>
 								</div>
 								{/* Second Row: Retirement */}
 								<div className="text-center md:text-left mb-2">
-									<span className="text-amber-300 text-7xl md:text-7xl lg:text-9xl font-black transition-all duration-300 group-hover:drop-shadow-[0_0_36px_rgba(250,204,21,0.95)] tracking-tight">
+									<span className="text-amber-300 text-5xl md:text-6xl lg:text-8xl font-black transition-all duration-300 group-hover:drop-shadow-[0_0_36px_rgba(250,204,21,0.95)] tracking-tight">
 										Retirement
 									</span>
 								</div>
 								{/* Third Row: From Planning to Action */}
 								<div className="text-center md:text-left">
-									<span className="text-white text-4xl md:text-4xl lg:text-6xl font-black transition-all duration-300 group-hover:drop-shadow-[0_0_36px_rgba(250,204,21,0.95)] tracking-tight">
+									<span className="text-white text-4xl md:text-4xl lg:text-5xl font-black italic transition-all duration-300 group-hover:drop-shadow-[0_0_36px_rgba(250,204,21,0.95)] tracking-tight">
 										From Planning to Action
 									</span>
 								</div>

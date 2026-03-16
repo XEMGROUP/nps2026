@@ -3,6 +3,8 @@
 import Link from "next/link"
 import { Facebook, Twitter, Instagram, Linkedin, MapPin, Phone, Mail, ArrowRight } from "lucide-react"
 import { useState } from "react"
+import { usePathname } from "next/navigation"
+import { motion } from "framer-motion"
 
 const quickLinks = [
   { href: "/about", label: "About NPS" },
@@ -23,6 +25,17 @@ const socialLinks = [
 export function Footer() {
   const [email, setEmail] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+  const pathname = usePathname()
+  const isHomePage = pathname === "/"
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    setMousePos({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    })
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -34,11 +47,92 @@ export function Footer() {
   }
 
   return (
-    <footer className="bg-slate-900 text-white pt-20 pb-10 border-t-[6px] border-emerald-600 relative overflow-hidden">
-      {/* Background Decoration */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-5">
-        <div className="absolute -top-[20%] -right-[10%] w-[50%] h-[50%] rounded-full bg-white blur-[120px]"></div>
-      </div>
+    <footer 
+      className={`text-white ${isHomePage ? 'pt-0' : 'pt-20'} pb-10 relative overflow-hidden ${isHomePage ? '' : 'bg-slate-900 border-t-[6px] border-emerald-600'}`}
+      style={isHomePage ? {
+        background: `linear-gradient(180deg, #016633 0%, #CC3300 100%)`,
+      } : {}}
+      onMouseMove={isHomePage ? handleMouseMove : undefined}
+    >
+      {/* CTA Section - Only on Home Page */}
+      {isHomePage && (
+        <>
+          {/* Cursor-following radial gradient */}
+          <div
+            className="absolute pointer-events-none transition-opacity duration-300"
+            style={{
+              left: `${mousePos.x}px`,
+              top: `${mousePos.y}px`,
+              width: '400px',
+              height: '400px',
+              transform: 'translate(-50%, -50%)',
+              background: 'radial-gradient(circle, rgba(204, 51, 0, 0.15) 0%, rgba(204, 51, 0, 0) 70%)',
+              filter: 'blur(40px)',
+            }}
+          />
+
+          <div className="container mx-auto px-4 relative z-10 pb-16">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="max-w-3xl mx-auto text-center"
+              style={{ willChange: 'opacity, transform' }}
+            >
+              <h2 className="text-3xl md:text-5xl font-black mb-6 tracking-tight">
+                Ready to Secure Your Retirement Future?
+              </h2>
+              <p className="text-xl text-gray-300 mb-10 leading-relaxed">
+                Join thousands of Nigerians and Africans who are taking control of their retirement destiny. Register now for the National Pre-Retirement Summit 2026 and unlock pathways to financial security and post-career productivity.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center relative z-20">
+                <Link
+                  href="/register"
+                  className="inline-flex items-center justify-center gap-2 bg-red-800 text-white px-8 py-4 rounded-lg font-bold transition-all shadow-lg hover:shadow-xl group"
+                >
+                  Register Now
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </Link>
+                <Link
+                  href="/program"
+                  className="inline-flex items-center justify-center gap-2 bg-white/20 hover:bg-white/30 text-white px-8 py-4 rounded-lg font-bold backdrop-blur-md transition-all border border-white/30 group"
+                >
+                  Explore NPS2026
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </div>
+
+              {/* Trust Badge */}
+              <div className="mt-12 pt-8 border-t border-white/10">
+                <p className="text-sm text-gray-400 mb-4">Trusted by over 2,000+ participants across Africa</p>
+                <div className="flex flex-wrap justify-center gap-6 text-gray-300 text-sm font-mono">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+                    Evidence-Based Planning
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+                    Expert Guidance
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+                    Community Support
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </>
+      )}
+
+      {/* Background Decoration - Only on non-home pages */}
+      {!isHomePage && (
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-5">
+          <div className="absolute -top-[20%] -right-[10%] w-[50%] h-[50%] rounded-full bg-white blur-[120px]"></div>
+        </div>
+      )}
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-12">

@@ -100,7 +100,7 @@ export default function Program2026Page() {
         <div className="container mx-auto px-3 py-6 max-w-6xl">
           {/* Main Content Card - No Border */}
           <div className="bg-white rounded-3xl p-6 md:p-12 shadow-xl shadow-black/5">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-secondary mb-4 tracking-tight">Strategic Shift: From Awareness to Execution</h2>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-emerald-800 mb-4 tracking-tight">Strategic Shift: From Awareness to Execution</h2>
             <p className="text-base md:text-lg text-muted-foreground leading-relaxed mb-6">
               Building on the strong national foundation established in 2024 and the continental expansion achieved in 2025, the 2026 National Pre-Retirement Summit represents a strategic shift from awareness to execution. With the theme "Own Your Retirement: From Planning to Action," the Summit will focus on enabling participants to translate knowledge into concrete decisions, enterprises, investments, and lifestyle changes that support long-term security, purpose, and wellbeing.
             </p>
@@ -112,25 +112,25 @@ export default function Program2026Page() {
             {/* Stats Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-8 mb-8">
               <div className="bg-muted rounded-xl p-4 text-center">
-                <span className="block text-2xl md:text-4xl font-black text-secondary mb-1">15-16</span>
+                <span className="block text-2xl md:text-4xl font-black text-emerald-800 mb-1">15-16</span>
                 <span className="text-xs md:text-sm font-mono text-muted-foreground">July 2026</span>
               </div>
               <div className="bg-muted rounded-xl p-4 text-center">
-                <span className="block text-2xl md:text-4xl font-black text-secondary mb-1">2</span>
+                <span className="block text-2xl md:text-4xl font-black text-emerald-800 mb-1">2</span>
                 <span className="text-xs md:text-sm font-mono text-muted-foreground">Main Days</span>
               </div>
               <div className="bg-muted rounded-xl p-4 text-center">
-                <span className="block text-2xl md:text-4xl font-black text-secondary mb-1">9</span>
+                <span className="block text-2xl md:text-4xl font-black text-emerald-800 mb-1">9</span>
                 <span className="text-xs md:text-sm font-mono text-muted-foreground">Technical Sessions</span>
               </div>
               <div className="bg-muted rounded-xl p-4 text-center">
-                <span className="block text-2xl md:text-4xl font-black text-secondary mb-1">Abuja</span>
+                <span className="block text-2xl md:text-4xl font-black text-emerald-800 mb-1">Abuja</span>
                 <span className="text-xs md:text-sm font-mono text-muted-foreground">Nigeria</span>
               </div>
             </div>
 
             {/* Objectives */}
-            <h3 className="text-xl sm:text-2xl font-black text-secondary mb-4 tracking-tight">Summit Objectives</h3>
+            <h3 className="text-xl sm:text-2xl font-black text-emerald-800 mb-4 tracking-tight">Summit Objectives</h3>
             <ul className="space-y-2 mb-8">
               {objectives.map((objective, index) => (
                 <li key={index} className="flex items-start gap-3 text-base text-muted-foreground">
@@ -141,7 +141,7 @@ export default function Program2026Page() {
             </ul>
 
             {/* Target Audience */}
-            <h3 className="text-xl sm:text-2xl font-black text-secondary mb-4 tracking-tight">Target Audience</h3>
+            <h3 className="text-xl sm:text-2xl font-black text-emerald-800 mb-4 tracking-tight">Target Audience</h3>
             <ul className="space-y-2 mb-8">
               {targetAudience.map((audience, index) => (
                 <li key={index} className="flex items-start gap-3 text-base text-muted-foreground">
@@ -152,7 +152,7 @@ export default function Program2026Page() {
             </ul>
 
             {/* Key Themes */}
-            <h3 className="text-xl sm:text-2xl font-black text-secondary mb-4 tracking-tight">Key Technical Themes</h3>
+            <h3 className="text-xl sm:text-2xl font-black text-emerald-800 mb-4 tracking-tight">Key Technical Themes</h3>
             <ul className="space-y-2 mb-8">
               {keyThemes.map((theme, index) => (
                 <li key={index} className="flex items-start gap-3 text-base text-muted-foreground">
@@ -163,13 +163,13 @@ export default function Program2026Page() {
             </ul>
 
             {/* Summit Format */}
-            <h3 className="text-xl sm:text-2xl font-black text-secondary mb-4 tracking-tight">Summit Format</h3>
+            <h3 className="text-xl sm:text-2xl font-black text-emerald-800 mb-4 tracking-tight">Summit Format</h3>
             <p className="text-base md:text-lg text-muted-foreground leading-relaxed mb-6">
               The 2026 Summit will run over two main days (July 15-16), combining policy dialogue, technical capacity-building sessions, exhibitions, and networking opportunities. An optional Day 3 extension will provide advanced sessions on legacy planning, entrepreneurship, and business pitching for participants seeking deeper engagement.
             </p>
 
             <div className="bg-muted/50 rounded-xl p-6 mb-12">
-              <h4 className="font-bold text-secondary mb-3">Summit Components:</h4>
+              <h4 className="font-bold text-emerald-800 mb-3">Summit Components:</h4>
               <ul className="space-y-2 text-muted-foreground">
                 <li className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
@@ -195,7 +195,7 @@ export default function Program2026Page() {
             </div>
 
             {/* Event Schedule */}
-            <h3 className="text-xl sm:text-2xl font-black text-secondary mb-6 tracking-tight">Event Schedule</h3>
+            <h3 className="text-xl sm:text-2xl font-black text-emerald-800 mb-6 tracking-tight">Event Schedule</h3>
             <div className="space-y-4 mb-8">
               {programDays.map((day, index) => (
                 <div key={index} className="bg-white rounded-2xl p-6">
@@ -203,7 +203,7 @@ export default function Program2026Page() {
                     <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary font-black text-sm">{day.day}</span>
                     <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">{day.date}</span>
                   </div>
-                  <h4 className="text-lg font-black text-secondary mb-3">{day.title}</h4>
+                  <h4 className="text-lg font-black text-emerald-800 mb-3">{day.title}</h4>
                   <ul className="space-y-2">
                     {day.sessions.map((session, sessionIndex) => (
                       <li key={sessionIndex} className="flex items-start gap-3 text-sm text-muted-foreground">

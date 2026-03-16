@@ -7,7 +7,6 @@ import { Summit2024 } from "@/components/home/summit-2024"
 import { Summit2025 } from "@/components/home/summit-2025"
 import { GuestSpeakers } from "@/components/home/guest-speakers"
 import { SummitDeliverables } from "@/components/home/summit-deliverables"
-import { CallToAction } from "@/components/home/call-to-action"
 
 export default function HomePage() {
   return (
@@ -21,7 +20,6 @@ export default function HomePage() {
         <Summit2025 />
         <GuestSpeakers />
         <SummitDeliverables />
-        <CallToAction />
       </main>
       <Footer />
     </div>

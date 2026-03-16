@@ -58,7 +58,7 @@ export default function History2024Page() {
               2024 Edition
             </div>
 
-            <h2 className="text-3xl font-black text-secondary mb-6 tracking-tight">Executive Summary</h2>
+            <h2 className="text-3xl font-black text-emerald-800 mb-6 tracking-tight">Executive Summary</h2>
             <p className="text-lg text-muted-foreground leading-relaxed mb-8">
               The inaugural National Pre-Retirement Summit, held in July 2024 in Abuja, marked the first coordinated national effort to address retirement planning in Nigeria in a comprehensive and practical way. The Summit positioned itself as a foundational platform, bringing together government institutions, labour unions, pension administrators, financial experts, and prospective retirees to confront the realities of retirement head-on.
             </p>
@@ -70,25 +70,25 @@ export default function History2024Page() {
             {/* Stats Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 mb-12">
               <div className="bg-muted rounded-xl p-6 text-center">
-                <span className="block text-4xl font-black text-secondary mb-2">1,000+</span>
+                <span className="block text-4xl font-black text-emerald-800 mb-2">1,000+</span>
                 <span className="text-sm font-mono text-muted-foreground">Attendees</span>
               </div>
               <div className="bg-muted rounded-xl p-6 text-center">
-                <span className="block text-4xl font-black text-secondary mb-2">40+</span>
+                <span className="block text-4xl font-black text-emerald-800 mb-2">40+</span>
                 <span className="text-sm font-mono text-muted-foreground">Speakers</span>
               </div>
               <div className="bg-muted rounded-xl p-6 text-center">
-                <span className="block text-4xl font-black text-secondary mb-2">3</span>
+                <span className="block text-4xl font-black text-emerald-800 mb-2">3</span>
                 <span className="text-sm font-mono text-muted-foreground">Days</span>
               </div>
               <div className="bg-muted rounded-xl p-6 text-center">
-                <span className="block text-4xl font-black text-secondary mb-2">20+</span>
+                <span className="block text-4xl font-black text-emerald-800 mb-2">20+</span>
                 <span className="text-sm font-mono text-muted-foreground">Sessions</span>
               </div>
             </div>
 
             {/* Key Highlights */}
-            <h3 className="text-2xl font-black text-secondary mb-6 tracking-tight">Key Highlights</h3>
+            <h3 className="text-2xl font-black text-emerald-800 mb-6 tracking-tight">Key Highlights</h3>
             <ul className="space-y-3 mb-12">
               {highlights.map((highlight, index) => (
                 <li key={index} className="flex items-start gap-3 text-muted-foreground">
@@ -99,7 +99,7 @@ export default function History2024Page() {
             </ul>
 
             {/* Participating Institutions */}
-            <h3 className="text-2xl font-black text-secondary mb-6 tracking-tight">Participating Institutions</h3>
+            <h3 className="text-2xl font-black text-emerald-800 mb-6 tracking-tight">Participating Institutions</h3>
             <ul className="space-y-3 mb-12">
               {participants.map((participant, index) => (
                 <li key={index} className="flex items-start gap-3 text-muted-foreground">
