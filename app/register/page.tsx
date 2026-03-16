@@ -254,7 +254,7 @@ export default function RegisterPage() {
           </div>
         )}
 
-        <main className="flex-grow pt-12 lg:pt-[88px] bg-slate-950">
+        <main className="flex-grow pt-12 lg:pt-[88px] bg-white">
           <div className="min-h-[80vh] flex items-center justify-center p-4 sm:p-6">
             <div className="w-full max-w-5xl flex flex-col lg:flex-row gap-6 lg:gap-10 items-start">
 

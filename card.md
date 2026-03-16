@@ -317,4 +317,15 @@ export function ThemeCalloutCard() {
     </section>
   );
 }
+
+```
+
+# PYTHON CODE 
+
+```python
+for i in range(50,1):
+  if i % 2 == 0:
+    print("even")
+  else:
+    print("odd")
 ```

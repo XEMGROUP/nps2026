@@ -116,11 +116,12 @@ export async function generateTicketImage(data: {
   ctx.fill()
 
   // ── Avatar ────────────────────────────────────────────────────────────────
-  // Large rounded-2xl square avatar centred in the white panel
-  const AV   = 190              // avatar size
+  // Large rounded-2xl square avatar filling upper half of the white panel
+  const PANEL_H = DIVIDER_Y - tpy 
+  const AV   = Math.floor(PANEL_H / 2) - 10
   const avX  = cx + (cw - AV) / 2
-  const avY  = tpy + 24
-  const avR  = 22               // rounded-2xl approximation
+  const avY  = tpy + 15
+  const avR  = 32
 
   // Avatar border
   ctx.strokeStyle = '#d1d5db'
@@ -143,66 +144,61 @@ export async function generateTicketImage(data: {
     rr(avX, avY, AV, AV, avR)
     ctx.fill()
     ctx.fillStyle = '#9ca3af'
-    ctx.font = MONO(400, 12)
+    ctx.font = MONO(400, 14)
     ctx.textAlign = 'center'
     ctx.fillText('Attendee Avatar', cx + cw / 2, avY + AV / 2 + 5)
   }
 
   // ── Top-section text ──────────────────────────────────────────────────────
+  // Summit Pass badge pushed to the bottom of the white panel
+  const BADGE_W = 280, BADGE_H = 54
+  const bX = cx + (cw - BADGE_W) / 2
+  const bY = DIVIDER_Y - BADGE_H - 24
+
   // All text is dark because white panel bg
   const TXT_CENTER = cx + cw / 2
-  let ty = avY + AV + 22
+  let ty = avY + AV + 36
 
   // Ticket type label
   ctx.fillStyle = '#475569'
-  ctx.font = MONO(700, 10.5)
+  ctx.font = MONO(700, 12)
   ctx.textAlign = 'center'
-  ctx.letterSpacing = '0.25em'
   ctx.fillText(`TICKET TYPE: ${(data.packageLabel || 'PARTICIPANT').toUpperCase()}`, TXT_CENTER, ty)
-  ctx.letterSpacing = '0'
 
-  ty += 44
+  ty += 48
 
   // Attendee name — big, Montserrat Black
   ctx.fillStyle = '#111827'
-  ctx.font = MONT(900, 38)
+  ctx.font = MONT(900, 44)
   ctx.fillText(data.fullName || 'Guest', TXT_CENTER, ty)
 
   ty += 38
 
   // Event date
   ctx.fillStyle = '#374151'
-  ctx.font = MONT(600, 16)
+  ctx.font = MONT(700, 18)
   ctx.fillText('July 15 – 16, 2026', TXT_CENTER, ty)
 
-  ty += 24
+  ty += 28
 
   // Ordered on
   ctx.fillStyle = '#6b7280'
-  ctx.font = MONO(400, 11)
+  ctx.font = MONO(400, 12)
   ctx.fillText(`Ordered on: ${new Date().toLocaleString()}`, TXT_CENTER, ty)
 
-  ty += 32
-
   // Summit Pass badge — emerald pill, still on white bg
-  const BADGE_W = 196, BADGE_H = 40
-  const bX = cx + (cw - BADGE_W) / 2
-  const bY = ty
-
   ctx.fillStyle = '#059669'
-  rr(bX, bY, BADGE_W, BADGE_H, 9)
+  rr(bX, bY, BADGE_W, BADGE_H, 12)
   ctx.fill()
 
   ctx.strokeStyle = '#34d399'
   ctx.lineWidth = 1
-  rr(bX, bY, BADGE_W, BADGE_H, 9)
+  rr(bX, bY, BADGE_W, BADGE_H, 12)
   ctx.stroke()
 
   ctx.fillStyle = '#ffffff'
-  ctx.font = MONO(700, 11)
-  ctx.letterSpacing = '0.15em'
-  ctx.fillText('SUMMIT PASS', TXT_CENTER, bY + BADGE_H / 2 + 5)
-  ctx.letterSpacing = '0'
+  ctx.font = MONT(900, 18)
+  ctx.fillText('SUMMIT PASS', TXT_CENTER, bY + BADGE_H / 2 + 6)
 
   // ══════════════════════════════════════════════════════════════════════════
   // PERFORATED DIVIDER
@@ -307,18 +303,16 @@ export async function generateTicketImage(data: {
   }
 
   // ── Bottom tagline ─────────────────────────────────────────────────────────
-  const TAG_Y = LOGO_Y + LOGO_H + 46
+  const TAG_Y = LOGO_Y + LOGO_H + 54
 
   ctx.textAlign = 'center'
   ctx.fillStyle = '#f1f5f9'
-  ctx.font = MONT(900, 26)
+  ctx.font = MONT(900, 30)
   ctx.fillText('NPS 2026', cx + cw / 2, TAG_Y)
 
-  ctx.fillStyle = 'rgba(148,163,184,0.75)'
-  ctx.font = MONO(400, 10.5)
-  ctx.letterSpacing = '0.38em'
-  ctx.fillText('REFINING THE FUTURE', cx + cw / 2, TAG_Y + 26)
-  ctx.letterSpacing = '0'
+  ctx.fillStyle = '#cbd5e1'
+  ctx.font = MONT(700, 18)
+  ctx.fillText('Own Your Retirement', cx + cw / 2, TAG_Y + 28)
 
   // ── Card border ────────────────────────────────────────────────────────────
   ctx.restore()  // end card clip
